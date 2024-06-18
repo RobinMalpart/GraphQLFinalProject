@@ -19,6 +19,8 @@ model User {
   username  String     @unique
   password  String
   articles  Article[] @relation("UserArticles")
+  likes     Like[]    @relation("UserLikes")
+  comments  Comment[] @relation("UserComments")
   
 }
 model Article {
@@ -27,4 +29,23 @@ model Article {
   content   String
   userId    String
   User      User     @relation(fields: [userId], references: [id], name: "UserArticles")
+  comments  Comment[] @relation("ArticleComments")
+  likes     Like[]    @relation("ArticleLikes")
+}
+
+model Comment {
+  id        String   @id @unique @default(uuid())
+  content   String
+  articleId String
+  Article   Article  @relation(fields: [articleId], references: [id], name: "ArticleComments")
+  userId    String
+  User      User     @relation(fields: [userId], references: [id], name: "UserComments")
+}
+
+model Like {
+  id        String   @id @unique @default(uuid())
+  userId    String
+  articleId String
+  User      User     @relation(fields: [userId], references: [id], name: "UserLikes")
+  Article   Article  @relation(fields: [articleId], references: [id], name: "ArticleLikes")
 }

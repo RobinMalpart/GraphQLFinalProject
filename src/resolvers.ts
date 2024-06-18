@@ -2,18 +2,21 @@ import { GraphQLError } from "graphql";
 import { Resolvers } from "./types.js";
 import { createUser } from "./mutations/user/createUser.js";
 import { createArticle } from "./mutations/article/createArticle.js";
+import { createComment } from "./mutations/comment/createComment.js";
+import { createLike } from "./mutations/like/createLike.js";
 import { signIn } from "./mutations/user/signIn.js";
+import { queryResolvers } from "./query/queryResolvers.js";
 
 export const resolvers: Resolvers = {
   Query: {
-    multiply: (parent, args, context, info) => {
-      const { number1, number2 } = args;
-      return number1 * number2;
-    },
+    ...queryResolvers,
+
   },
   Mutation: {
     createArticle,
     createUser,
     signIn,
+    createComment,
+    createLike,
   },
 };
