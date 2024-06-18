@@ -77,7 +77,6 @@ export type Mutation = {
   signIn: SignInResponse;
 };
 
-
 export type MutationCreateArticleArgs = {
   content: Scalars['String']['input'];
   title: Scalars['String']['input'];
