@@ -1,6 +1,7 @@
 import { GraphQLError } from "graphql";
-import { Resolvers, Speciality } from "./types.js";
+import { Resolvers } from "./types.js";
 import { createUser } from "./mutations/user/createUser.js";
+import { createArticle } from "./mutations/article/createArticle.js";
 import { signIn } from "./mutations/user/signIn.js";
 
 
@@ -14,7 +15,7 @@ export const resolvers: Resolvers = {
 
   },
   Mutation: {
-   
+    createArticle,
     createUser,
     signIn,
   },

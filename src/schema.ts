@@ -10,7 +10,7 @@ export const typeDefs = gql`
   }
 
   type Mutation {
-
+    createArticle(title: String!, content: String!, userId: ID!): CreateArticleResponse!
     createUser(username: String!, password: String!): CreateUserResponse!
     signIn(username: String!, password: String!): SignInResponse!
   }
@@ -32,6 +32,20 @@ export const typeDefs = gql`
     message: String!
     success: Boolean!
     user: User
+  }
+
+  
+  type Article {
+    id: ID!
+    title: String!
+    content: String!
+    User: User!
+  }
+  type CreateArticleResponse {
+    code: Int!
+    message: String!
+    success: Boolean!
+    article: Article
   }
 
 `;

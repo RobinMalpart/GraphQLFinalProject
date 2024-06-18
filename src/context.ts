@@ -7,4 +7,5 @@ export type Context = {
     db: PrismaClient
   }
   user: JWTUser | null
+    
 }
