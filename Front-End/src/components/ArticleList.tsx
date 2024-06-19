@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { useQuery, useMutation } from '@apollo/client';
 import { GET_ARTICLES, GET_COMMENTS, GET_LIKES } from '../graphql/queries';
-import { CREATE_COMMENT, CREATE_LIKE, DELETE_LIKE, UPDATE_ARTICLE } from '../graphql/mutations';
-import { GetArticlesQuery, GetCommentsQuery, GetLikesQuery, CreateCommentMutation, CreateCommentMutationVariables, CreateLikeMutation, CreateLikeMutationVariables, DeleteLikeMutation, DeleteLikeMutationVariables, UpdateArticleMutation, UpdateArticleMutationVariables } from '../generated/graphql';
+import { CREATE_COMMENT, CREATE_LIKE, DELETE_LIKE, UPDATE_ARTICLE, DELETE_ARTICLE } from '../graphql/mutations';
+import { GetArticlesQuery, GetCommentsQuery, GetLikesQuery, CreateCommentMutation, CreateCommentMutationVariables, CreateLikeMutation, CreateLikeMutationVariables, DeleteLikeMutation, DeleteLikeMutationVariables, UpdateArticleMutation, UpdateArticleMutationVariables, DeleteArticleMutation, DeleteArticleMutationVariables } from '../generated/graphql';
 import { HandThumbUpIcon, ChatBubbleOvalLeftEllipsisIcon, PencilSquareIcon } from '@heroicons/react/24/outline';
 import { jwtDecode } from 'jwt-decode';
 import CreateArticle from './CreateArticle';
@@ -21,6 +21,7 @@ const ArticleList: React.FC = () => {
   const [createLike] = useMutation<CreateLikeMutation, CreateLikeMutationVariables>(CREATE_LIKE);
   const [deleteLike] = useMutation<DeleteLikeMutation, DeleteLikeMutationVariables>(DELETE_LIKE);
   const [updateArticle] = useMutation<UpdateArticleMutation, UpdateArticleMutationVariables>(UPDATE_ARTICLE);
+  const [deleteArticle] = useMutation<DeleteArticleMutation, DeleteArticleMutationVariables>(DELETE_ARTICLE);
 
   const [articles, setArticles] = useState([]);
   const [commentContent, setCommentContent] = useState('');
@@ -151,6 +152,21 @@ const ArticleList: React.FC = () => {
     }
   };
 
+  const handleDeleteArticle = async (articleId: string) => {
+    try {
+      const { data } = await deleteArticle({
+        variables: { deleteArticleId: articleId }
+      });
+      if (data?.deleteArticle.success) {
+        setArticles(articles.filter(article => article.id !== articleId));
+      } else {
+        alert(data?.deleteArticle.message);
+      }
+    } catch (err) {
+      console.error('Error deleting article:', err);
+    }
+  };
+
   const filteredArticles = sortedArticles.filter(article => article.User.username.toLowerCase().includes(authorFilter.toLowerCase()));
 
   if (loading) return <p>Loading...</p>;
@@ -201,6 +217,7 @@ const ArticleList: React.FC = () => {
               />
               <button type="submit" className="w-full bg-green-600 text-white py-2 rounded-md hover:bg-green-700">Update Article</button>
               <button type="button" className="w-full bg-red-600 text-white py-2 rounded-md hover:bg-red-700 mt-2" onClick={() => setEditingArticleId(null)}>Cancel</button>
+              <button type="button" className="w-full bg-red-600 text-white py-2 rounded-md hover:bg-red-700 mt-2" onClick={() => handleDeleteArticle(article.id)}>Delete</button>
             </form>
           ) : (
             <>

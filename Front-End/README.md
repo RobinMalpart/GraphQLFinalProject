@@ -17,8 +17,8 @@ Authentification des Utilisateurs
 Gestion des Articles
 - [x] Création d'articles
 - [x] Lecture d'articles
-- [ ] Mise à jour d'articles
-- [ ] Suppression d'articles
+- [x] Mise à jour d'articles
+- [x] Suppression d'articles
 - [x] Affichage de l'auteur des articles
 - [x] Affichage du contenu des articles
 - [x] Affichage des commentaires des articles
