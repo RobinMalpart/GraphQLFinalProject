@@ -2,11 +2,10 @@ import React, { useState, useEffect } from 'react';
 import { useQuery } from '@apollo/client';
 import { Link } from 'react-router-dom';
 import { GET_ARTICLES } from '../graphql/queries';
-import { GetArticlesQuery } from '../generated/graphql';
-import { UserIcon, DocumentTextIcon, ChatBubbleLeftRightIcon, CalendarDaysIcon, PhotoIcon, UsersIcon } from '@heroicons/react/24/outline';
+import { GetArticlesQuery, GetArticlesQuery_getArticles } from '../generated/graphql';
+import { DocumentTextIcon, ChatBubbleLeftRightIcon, CalendarDaysIcon, PhotoIcon, UsersIcon } from '@heroicons/react/24/outline';
 import { jwtDecode } from 'jwt-decode';
 import ArticleList from './ArticleList';
-import CreateArticle from './CreateArticle';
 import UserList from './UserList';
 
 interface DecodedToken {
@@ -25,7 +24,7 @@ const MainPage: React.FC = () => {
   }
 
   const { loading, error, data } = useQuery<GetArticlesQuery>(GET_ARTICLES);
-  const [articles, setArticles] = useState([]);
+  const [articles, setArticles] = useState<GetArticlesQuery_getArticles[]>([]);
 
   useEffect(() => {
     if (data) {

@@ -23,33 +23,32 @@ const ArticleList: React.FC = () => {
   const [updateArticle] = useMutation<UpdateArticleMutation, UpdateArticleMutationVariables>(UPDATE_ARTICLE);
   const [deleteArticle] = useMutation<DeleteArticleMutation, DeleteArticleMutationVariables>(DELETE_ARTICLE);
 
-  const [articles, setArticles] = useState([]);
+  const [articles, setArticles] = useState<GetArticlesQuery['getArticles']>([]);
   const [commentContent, setCommentContent] = useState('');
   const [commentArticleId, setCommentArticleId] = useState<string | null>(null);
-  const [comments, setComments] = useState([]);
-  const [likes, setLikes] = useState([]);
+  const [comments, setComments] = useState<GetCommentsQuery['getComments']>([]);
+  const [likes, setLikes] = useState<GetLikesQuery['getLikes']>([]);
   const [sortOrder, setSortOrder] = useState('asc');
   const [authorFilter, setAuthorFilter] = useState('');
   const [editingArticleId, setEditingArticleId] = useState<string | null>(null);
   const [editingTitle, setEditingTitle] = useState('');
   const [editingContent, setEditingContent] = useState('');
-  const [sortedArticles, setSortedArticles] = useState(articles);
-
+  const [sortedArticles, setSortedArticles] = useState<GetArticlesQuery['getArticles']>([]);
 
   useEffect(() => {
-    if (data) {
+    if (data?.getArticles) {
       setArticles(data.getArticles);
     }
   }, [data]);
 
   useEffect(() => {
-    if (commentsData) {
+    if (commentsData?.getComments) {
       setComments(commentsData.getComments);
     }
   }, [commentsData]);
 
   useEffect(() => {
-    if (likesData) {
+    if (likesData?.getLikes) {
       setLikes(likesData.getLikes);
     }
   }, [likesData]);
@@ -65,63 +64,67 @@ const ArticleList: React.FC = () => {
 
   const handleCommentSubmit = async (articleId: string) => {
     const token = localStorage.getItem('token');
-    const decoded: DecodedToken = jwtDecode(token as string);
-    const userId = decoded.id;
+    if (token) {
+      const decoded: DecodedToken = jwtDecode(token);
+      const userId = decoded.id;
 
-    if (userId && commentContent) {
-      try {
-        const { data } = await createComment({
-          variables: { content: commentContent, userId, articleId }
-        });
-        if (data?.createComment.success && data.createComment.comment) {
-          setComments([...comments, data.createComment.comment]);
-          setCommentContent('');
-        } else {
-          alert(data?.createComment.message);
+      if (userId && commentContent) {
+        try {
+          const { data } = await createComment({
+            variables: { content: commentContent, userId, articleId }
+          });
+          if (data?.createComment.success && data.createComment.comment) {
+            setComments([...comments, data.createComment.comment]);
+            setCommentContent('');
+          } else {
+            alert(data?.createComment.message);
+          }
+        } catch (err) {
+          console.error('Error creating comment:', err);
         }
-      } catch (err) {
-        console.error('Error creating comment:', err);
       }
     }
   };
 
   const handleLike = async (articleId: string) => {
     const token = localStorage.getItem('token');
-    const decoded: DecodedToken = jwtDecode(token as string);
-    const userId = decoded.id;
+    if (token) {
+      const decoded: DecodedToken = jwtDecode(token);
+      const userId = decoded.id;
 
-    const existingLike = likes.find(like => like.articleId === articleId && like.userId === userId);
+      const existingLike = likes.find(like => like.articleId === articleId && like.userId === userId);
 
-    if (existingLike) {
-      try {
-        const { data } = await deleteLike({
-          variables: { deleteLikeId: existingLike.id }
-        });
-        if (data?.deleteLike.success) {
-          setLikes(likes.filter(like => like.id !== existingLike.id));
-        } else {
-          alert(data?.deleteLike.message);
+      if (existingLike) {
+        try {
+          const { data } = await deleteLike({
+            variables: { deleteLikeId: existingLike.id }
+          });
+          if (data?.deleteLike.success) {
+            setLikes(likes.filter(like => like.id !== existingLike.id));
+          } else {
+            alert(data?.deleteLike.message);
+          }
+        } catch (err) {
+          console.error('Error deleting like:', err);
         }
-      } catch (err) {
-        console.error('Error deleting like:', err);
-      }
-    } else {
-      try {
-        const { data } = await createLike({
-          variables: { userId, articleId }
-        });
-        if (data?.createLike.success && data.createLike.like) {
-          setLikes([...likes, data.createLike.like]);
-        } else {
-          alert(data?.createLike.message);
+      } else {
+        try {
+          const { data } = await createLike({
+            variables: { userId, articleId }
+          });
+          if (data?.createLike.success && data.createLike.like) {
+            setLikes([...likes, data.createLike.like]);
+          } else {
+            alert(data?.createLike.message);
+          }
+        } catch (err) {
+          console.error('Error creating like:', err);
         }
-      } catch (err) {
-        console.error('Error creating like:', err);
       }
     }
   };
 
-  const handleAddArticle = (newArticle: { id: string, title: string, content: string, User: { username: string, id: string } }) => {
+  const handleAddArticle = (newArticle: GetArticlesQuery['getArticles'][0]) => {
     setArticles([newArticle, ...articles]);
   };
 
@@ -195,8 +198,8 @@ const ArticleList: React.FC = () => {
           value={sortOrder}
           onChange={(e) => setSortOrder(e.target.value)}
         >
-          <option value="asc">Ascending</option>
-          <option value="desc">Descending</option>
+          <option value="asc">Croissant</option>
+          <option value="desc">Décroissant</option>
         </select>
       </div>
 
@@ -215,9 +218,9 @@ const ArticleList: React.FC = () => {
                 value={editingContent}
                 onChange={(e) => setEditingContent(e.target.value)}
               />
-              <button type="submit" className="w-full bg-green-600 text-white py-2 rounded-md hover:bg-green-700">Update Article</button>
-              <button type="button" className="w-full bg-red-600 text-white py-2 rounded-md hover:bg-red-700 mt-2" onClick={() => setEditingArticleId(null)}>Cancel</button>
-              <button type="button" className="w-full bg-red-600 text-white py-2 rounded-md hover:bg-red-700 mt-2" onClick={() => handleDeleteArticle(article.id)}>Delete</button>
+              <button type="submit" className="w-full bg-green-600 text-white py-2 rounded-md hover:bg-green-700">Mettre à jour le post</button>
+              <button type="button" className="w-full bg-red-600 text-white py-2 rounded-md hover:bg-red-700 mt-2" onClick={() => setEditingArticleId(null)}>Annuler</button>
+              <button type="button" className="w-full bg-red-600 text-white py-2 rounded-md hover:bg-red-700 mt-2" onClick={() => handleDeleteArticle(article.id)}>Supprimer</button>
             </form>
           ) : (
             <>
