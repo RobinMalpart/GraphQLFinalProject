@@ -115,12 +115,7 @@ const ArticleList: React.FC = () => {
     <div className="col-span-2 mt-5 flex flex-col">
       <div className="mb-4">
         <label htmlFor="sortOrder" className="block text-sm font-medium text-gray-700">Sort by Likes</label>
-        <select
-          id="sortOrder"
-          className="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm rounded-md"
-          value={sortOrder}
-          onChange={(e) => setSortOrder(e.target.value)}
-        >
+        <select id="sortOrder" className="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm rounded-md" value={sortOrder} onChange={(e) => setSortOrder(e.target.value)} >
           <option value="asc">Ascending</option>
           <option value="desc">Descending</option>
         </select>
@@ -130,8 +125,8 @@ const ArticleList: React.FC = () => {
         <div key={article.id} className="bg-white shadow-md rounded-lg p-4 mb-4 mx-5">
           <div className="border-b-4 pb-2">
             <h2 className="text-xl font-bold">{article.title}</h2>
-            <p className="text-sm">{article.content}</p>
             <p className="text-sm text-gray-500">Posted by {article.User.username}</p>
+            <p className="mt-1">{article.content}</p>
           </div>
           
           <div className="flex justify-around mt-3">
@@ -158,12 +153,7 @@ const ArticleList: React.FC = () => {
           {commentArticleId === article.id && (
             <div className="mt-4">
               <form onSubmit={(e) => { e.preventDefault(); handleCommentSubmit(article.id); }}>
-                <textarea
-                  placeholder="Votre commentaire"
-                  className="w-full p-2 mb-2 border rounded"
-                  value={commentContent}
-                  onChange={(e) => setCommentContent(e.target.value)}
-                />
+                <textarea placeholder="Votre commentaire" className="w-full p-2 mb-2 border rounded" value={commentContent} onChange={(e) => setCommentContent(e.target.value)} />
                 <button type="submit" className="w-full bg-blue-600 text-white py-2 rounded-md hover:bg-blue-700">
                   Ajouter un commentaire
                 </button>
