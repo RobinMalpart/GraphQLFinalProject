@@ -22,7 +22,7 @@ export const typeDefs = gql`
     createLike(userId: ID!, articleId: ID!): CreateLikeResponse!
     deleteArticle(id: ID!): DeleteArticleResponse!
     updateArticle(id: ID!, title: String, content: String): UpdateArticleResponse!
-  }
+    deleteLike(id: ID!): DeleteLikeResponse!}
 
   type User {
     id: ID!
@@ -48,6 +48,9 @@ export const typeDefs = gql`
     id: ID!
     title: String!
     content: String!
+    likes: [Like!]!
+    User: User!
+    comments: [Comment!]!
 
   }
 
@@ -64,7 +67,7 @@ export const typeDefs = gql`
     userId: ID!
     articleId: ID!
     User: User!
-    Article: Article!
+
   }
 
   type CreateCommentResponse {
@@ -79,7 +82,7 @@ export const typeDefs = gql`
     userId: ID!
     articleId: ID!
     User: User!
-    Article: Article!
+
   }
 
   type CreateLikeResponse {
@@ -101,4 +104,10 @@ export const typeDefs = gql`
     success: Boolean!
     article: Article
   }
+  type DeleteLikeResponse {
+  code: Int!
+  message: String!
+  success: Boolean!
+  like: Like
+}
 `;

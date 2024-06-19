@@ -12,6 +12,12 @@ export const createArticle: MutationResolvers['createArticle'] = async (_, {titl
                 id: userId
             }
           }, 
+        likes: {
+            create: []
+          },
+        comments: {
+            create: []
+          }
       },
         include: {
             User: true
@@ -29,7 +35,9 @@ export const createArticle: MutationResolvers['createArticle'] = async (_, {titl
         User: {
           id: createdArticle.User.id,
           username: createdArticle.User.username
-        }
+        },
+        likes: [],
+        comments: []
       }
     }
   } catch(e) {

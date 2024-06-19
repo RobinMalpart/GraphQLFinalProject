@@ -18,7 +18,6 @@ export const createComment: MutationResolvers['createComment'] = async (_, { con
       },
       include: {
         User: true,
-        Article: true,
       },
     });
 
@@ -35,11 +34,7 @@ export const createComment: MutationResolvers['createComment'] = async (_, { con
           id: createdComment.User.id,
           username: createdComment.User.username,
         },
-        Article: {
-          id: createdComment.Article.id,
-          title: createdComment.Article.title,
-          content: createdComment.Article.content,
-        },
+   
       },
     };
   } catch (e) {

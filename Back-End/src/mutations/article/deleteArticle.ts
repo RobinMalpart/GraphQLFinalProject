@@ -21,6 +21,8 @@ export const deleteArticle: MutationResolvers['deleteArticle'] = async (_, { id 
           id: deletedArticle.User.id,
           username: deletedArticle.User.username,
         },
+        likes: [],
+        comments: [],
       },
     };
   } catch (e) {

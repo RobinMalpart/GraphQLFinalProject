@@ -48,4 +48,5 @@ model Like {
   articleId String
   User      User     @relation(fields: [userId], references: [id], name: "UserLikes")
   Article   Article  @relation(fields: [articleId], references: [id], name: "ArticleLikes", onDelete: Cascade)
+  @@unique([userId, articleId])
 }
