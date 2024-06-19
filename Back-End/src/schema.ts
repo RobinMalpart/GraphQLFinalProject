@@ -20,6 +20,7 @@ export const typeDefs = gql`
     signIn(username: String!, password: String!): SignInResponse!
     createComment(content: String!, userId: ID!, articleId: ID!): CreateCommentResponse!
     createLike(userId: ID!, articleId: ID!): CreateLikeResponse!
+    deleteArticle(id: ID!): DeleteArticleResponse!
   }
 
   type User {
@@ -59,6 +60,10 @@ export const typeDefs = gql`
   type Comment {
     id: ID!
     content: String!
+    userId: ID!
+    articleId: ID!
+    User: User!
+    Article: Article!
   }
 
   type CreateCommentResponse {
@@ -70,6 +75,10 @@ export const typeDefs = gql`
 
   type Like {
     id: ID!
+    userId: ID!
+    articleId: ID!
+    User: User!
+    Article: Article!
   }
 
   type CreateLikeResponse {
@@ -77,5 +86,11 @@ export const typeDefs = gql`
     message: String!
     success: Boolean!
     like: Like
+  }
+  type DeleteArticleResponse {
+    code: Int!
+    message: String!
+    success: Boolean!
+    article: Article
   }
 `;

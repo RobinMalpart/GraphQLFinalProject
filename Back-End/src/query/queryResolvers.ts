@@ -1,3 +1,4 @@
+import { GraphQLError } from "graphql";
 import { QueryResolvers } from "../types.js";
 
 export const queryResolvers: QueryResolvers = {
@@ -36,21 +37,55 @@ export const queryResolvers: QueryResolvers = {
     });
   },
   getLike: async (_, { id }, { dataSources }) => {
-    return await dataSources.db.like.findUnique({
+    const like = await dataSources.db.like.findUnique({
       where: { id },
       include: {
         User: true,
         Article: true,
       },
     });
+
+    if (!like) {
+      throw new GraphQLError('Like not found');
+    }
+
+    return {
+      id: like.id,
+      userId: like.userId,
+      articleId: like.articleId,
+      User: {
+        id: like.User.id,
+        username: like.User.username,
+      },
+      Article: {
+        id: like.Article.id,
+        title: like.Article.title,
+        content: like.Article.content,
+      },
+    };
   },
   getLikes: async (_, __, { dataSources }) => {
-    return await dataSources.db.like.findMany({
+    const likes = await dataSources.db.like.findMany({
       include: {
         User: true,
         Article: true,
       },
     });
+
+    return likes.map(like => ({
+      id: like.id,
+      userId: like.userId,
+      articleId: like.articleId,
+      User: {
+        id: like.User.id,
+        username: like.User.username,
+      },
+      Article: {
+        id: like.Article.id,
+        title: like.Article.title,
+        content: like.Article.content,
+      },
+    }));
   },
   getComment: async (_, { id }, { dataSources }) => {
     return await dataSources.db.comment.findUnique({
