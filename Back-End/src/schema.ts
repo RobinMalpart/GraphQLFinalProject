@@ -21,6 +21,7 @@ export const typeDefs = gql`
     createComment(content: String!, userId: ID!, articleId: ID!): CreateCommentResponse!
     createLike(userId: ID!, articleId: ID!): CreateLikeResponse!
     deleteArticle(id: ID!): DeleteArticleResponse!
+    updateArticle(id: ID!, title: String, content: String): UpdateArticleResponse!
   }
 
   type User {
@@ -88,6 +89,13 @@ export const typeDefs = gql`
     like: Like
   }
   type DeleteArticleResponse {
+    code: Int!
+    message: String!
+    success: Boolean!
+    article: Article
+  }
+
+  type UpdateArticleResponse {
     code: Int!
     message: String!
     success: Boolean!

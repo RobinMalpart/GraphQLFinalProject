@@ -92,6 +92,7 @@ export type Mutation = {
   createUser: CreateUserResponse;
   deleteArticle: DeleteArticleResponse;
   signIn: SignInResponse;
+  updateArticle: UpdateArticleResponse;
 };
 
 
@@ -129,6 +130,13 @@ export type MutationDeleteArticleArgs = {
 export type MutationSignInArgs = {
   password: Scalars['String']['input'];
   username: Scalars['String']['input'];
+};
+
+
+export type MutationUpdateArticleArgs = {
+  content?: InputMaybe<Scalars['String']['input']>;
+  id: Scalars['ID']['input'];
+  title?: InputMaybe<Scalars['String']['input']>;
 };
 
 export type Query = {
@@ -169,6 +177,14 @@ export type SignInResponse = {
   message: Scalars['String']['output'];
   success: Scalars['Boolean']['output'];
   token?: Maybe<Scalars['String']['output']>;
+};
+
+export type UpdateArticleResponse = {
+  __typename?: 'UpdateArticleResponse';
+  article?: Maybe<Article>;
+  code: Scalars['Int']['output'];
+  message: Scalars['String']['output'];
+  success: Scalars['Boolean']['output'];
 };
 
 export type User = {
@@ -263,6 +279,7 @@ export type ResolversTypes = {
   Query: ResolverTypeWrapper<{}>;
   SignInResponse: ResolverTypeWrapper<SignInResponse>;
   String: ResolverTypeWrapper<Scalars['String']['output']>;
+  UpdateArticleResponse: ResolverTypeWrapper<UpdateArticleResponse>;
   User: ResolverTypeWrapper<User>;
 };
 
@@ -283,6 +300,7 @@ export type ResolversParentTypes = {
   Query: {};
   SignInResponse: SignInResponse;
   String: Scalars['String']['output'];
+  UpdateArticleResponse: UpdateArticleResponse;
   User: User;
 };
 
@@ -359,6 +377,7 @@ export type MutationResolvers<ContextType = Context, ParentType extends Resolver
   createUser?: Resolver<ResolversTypes['CreateUserResponse'], ParentType, ContextType, RequireFields<MutationCreateUserArgs, 'password' | 'username'>>;
   deleteArticle?: Resolver<ResolversTypes['DeleteArticleResponse'], ParentType, ContextType, RequireFields<MutationDeleteArticleArgs, 'id'>>;
   signIn?: Resolver<ResolversTypes['SignInResponse'], ParentType, ContextType, RequireFields<MutationSignInArgs, 'password' | 'username'>>;
+  updateArticle?: Resolver<ResolversTypes['UpdateArticleResponse'], ParentType, ContextType, RequireFields<MutationUpdateArticleArgs, 'id'>>;
 };
 
 export type QueryResolvers<ContextType = Context, ParentType extends ResolversParentTypes['Query'] = ResolversParentTypes['Query']> = {
@@ -380,6 +399,14 @@ export type SignInResponseResolvers<ContextType = Context, ParentType extends Re
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
+export type UpdateArticleResponseResolvers<ContextType = Context, ParentType extends ResolversParentTypes['UpdateArticleResponse'] = ResolversParentTypes['UpdateArticleResponse']> = {
+  article?: Resolver<Maybe<ResolversTypes['Article']>, ParentType, ContextType>;
+  code?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
+  message?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  success?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
 export type UserResolvers<ContextType = Context, ParentType extends ResolversParentTypes['User'] = ResolversParentTypes['User']> = {
   id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
   username?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
@@ -398,6 +425,7 @@ export type Resolvers<ContextType = Context> = {
   Mutation?: MutationResolvers<ContextType>;
   Query?: QueryResolvers<ContextType>;
   SignInResponse?: SignInResponseResolvers<ContextType>;
+  UpdateArticleResponse?: UpdateArticleResponseResolvers<ContextType>;
   User?: UserResolvers<ContextType>;
 };
 
