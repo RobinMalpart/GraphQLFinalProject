@@ -1,9 +1,35 @@
-# Vue 3 + TypeScript + Vite
+# Front-End
 
-This template should help get you started developing with Vue 3 and TypeScript in Vite. The template uses Vue 3 `<script setup>` SFCs, check out the [script setup docs](https://v3.vuejs.org/api/sfc-script-setup.html#sfc-script-setup) to learn more.
+## Comment lancer le projet
+```
+Npm i
+```
+```
+Npm run dev
+```
 
-## Recommended Setup
+## Tasks
 
-- [VS Code](https://code.visualstudio.com/) + [Vue - Official](https://marketplace.visualstudio.com/items?itemName=Vue.volar) (previously Volar) and disable Vetur
+Authentification des Utilisateurs
+- [x] Inscription et connexion avec validation
+- [x] Gestion des sessions utilisateur
 
-- Use [vue-tsc](https://github.com/vuejs/language-tools/tree/master/packages/tsc) for performing the same type checking from the command line, or for generating d.ts files for SFCs.
+Gestion des Articles
+- [x] Création d'articles
+- [x] Lecture d'articles
+- [ ] Mise à jour d'articles
+- [ ] Suppression d'articles
+- [ ] Affichage de l'auteur des articles
+- [x] Affichage du contenu des articles
+- [ ] Affichage des commentaires des articles
+- [ ] Affichage des likes des articles
+
+Interaction avec les Articles
+- [ ] Possibilité pour les utilisateurs de commenter les articles
+- [ ] Système de "like" pour les articles
+
+Navigation et Filtrage
+- [x] Vue d'ensemble des derniers articles sur la page principale
+- [ ] Filtre des articles par auteur
+- [ ] Filtre des articles par popularité (ascendant / descendant nombre de likes)
+
