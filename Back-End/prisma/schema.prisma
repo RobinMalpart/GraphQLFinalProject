@@ -37,7 +37,7 @@ model Comment {
   id        String   @id @unique @default(uuid())
   content   String
   articleId String
-  Article   Article  @relation(fields: [articleId], references: [id], name: "ArticleComments")
+  Article   Article  @relation(fields: [articleId], references: [id], name: "ArticleComments", onDelete: Cascade)
   userId    String
   User      User     @relation(fields: [userId], references: [id], name: "UserComments")
 }
@@ -47,5 +47,5 @@ model Like {
   userId    String
   articleId String
   User      User     @relation(fields: [userId], references: [id], name: "UserLikes")
-  Article   Article  @relation(fields: [articleId], references: [id], name: "ArticleLikes")
+  Article   Article  @relation(fields: [articleId], references: [id], name: "ArticleLikes", onDelete: Cascade)
 }
