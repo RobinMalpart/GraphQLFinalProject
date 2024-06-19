@@ -4,7 +4,7 @@ import { GET_ARTICLES, GET_COMMENTS, GET_LIKES } from '../graphql/queries';
 import { CREATE_COMMENT, CREATE_LIKE, DELETE_LIKE } from '../graphql/mutations';
 import { GetArticlesQuery, GetCommentsQuery, GetLikesQuery, CreateCommentMutation, CreateCommentMutationVariables, CreateLikeMutation, CreateLikeMutationVariables, DeleteLikeMutation, DeleteLikeMutationVariables } from '../generated/graphql';
 import { HandThumbUpIcon, ChatBubbleOvalLeftEllipsisIcon, PencilSquareIcon } from '@heroicons/react/24/outline';
-import { jwtDecode }  from 'jwt-decode';
+import { jwtDecode } from 'jwt-decode';
 import CreateArticle from './CreateArticle';
 
 interface DecodedToken {
@@ -22,12 +22,13 @@ const ArticleList: React.FC = () => {
   const [deleteLike] = useMutation<DeleteLikeMutation, DeleteLikeMutationVariables>(DELETE_LIKE);
 
   const [articles, setArticles] = useState(data?.getArticles || []);
+  const [sortedArticles, setSortedArticles] = useState(articles);
   const [commentContent, setCommentContent] = useState('');
   const [commentArticleId, setCommentArticleId] = useState<string | null>(null);
   const [comments, setComments] = useState(commentsData?.getComments || []);
   const [likes, setLikes] = useState(likesData?.getLikes || []);
   const [sortOrder, setSortOrder] = useState('asc');
-  
+  const [authorFilter, setAuthorFilter] = useState('');
 
   useEffect(() => {
     if (data) {
@@ -53,8 +54,8 @@ const ArticleList: React.FC = () => {
       const likesB = likes.filter(like => like.articleId === b.id).length;
       return sortOrder === 'asc' ? likesA - likesB : likesB - likesA;
     });
-    setArticles(sorted);
-  }, [likes, sortOrder]);
+    setSortedArticles(sorted);
+  }, [likes, sortOrder, articles]);
 
   const handleCommentSubmit = async (articleId: string) => {
     const token = localStorage.getItem('token');
@@ -118,13 +119,26 @@ const ArticleList: React.FC = () => {
     setArticles([newArticle, ...articles]);
   };
 
+  const filteredArticles = sortedArticles.filter(article => article.User.username.toLowerCase().includes(authorFilter.toLowerCase()));
+
   if (loading) return <p>Loading...</p>;
   if (error) return <p>Error: {error.message}</p>;
 
   return (
     <div className="col-span-2 mt-5 flex flex-col">
       <CreateArticle onAddArticle={handleAddArticle} />
-      
+
+      <div className="mb-4">
+        <label htmlFor="authorFilter" className="block text-sm font-medium text-gray-700">Filter by Author</label>
+        <input
+          type="text"
+          id="authorFilter"
+          className="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm rounded-md"
+          value={authorFilter}
+          onChange={(e) => setAuthorFilter(e.target.value)}
+        />
+      </div>
+
       <div className="mb-4">
         <label htmlFor="sortOrder" className="block text-sm font-medium text-gray-700">Sort by Likes</label>
         <select
@@ -138,7 +152,7 @@ const ArticleList: React.FC = () => {
         </select>
       </div>
 
-      {articles.map(article => (
+      {filteredArticles.map(article => (
         <div key={article.id} className="bg-white shadow-md rounded-lg p-4 mb-4 mx-5">
           <div className="border-b-4 pb-2">
             <h2 className="text-xl font-bold">{article.title}</h2>
