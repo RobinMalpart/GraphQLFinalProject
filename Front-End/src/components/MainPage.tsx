@@ -33,10 +33,6 @@ const MainPage: React.FC = () => {
     }
   }, [data]);
 
-  const handleAddArticle = (article) => {
-    setArticles([article, ...articles]);
-  };
-
   if (loading) return <p>Loading...</p>;
   if (error) return <p>Error: {error.message}</p>;
 
@@ -81,10 +77,7 @@ const MainPage: React.FC = () => {
         </div>
 
         {/* Colonne du milieu */}
-        <div className="col-span-2 mt-5 flex flex-col">
-          {/* Formulaire de création d'article */}
-          <CreateArticle onAddArticle={handleAddArticle} />
-          
+        <div className="col-span-2 mt-5 flex flex-col">          
           {/* Articles */}
           <ArticleList articles={articles} />
         </div>
