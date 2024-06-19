@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { useQuery, useMutation } from '@apollo/client';
 import { GET_ARTICLES, GET_COMMENTS, GET_LIKES } from '../graphql/queries';
-import { CREATE_COMMENT, CREATE_LIKE, DELETE_LIKE } from '../graphql/mutations';
-import { GetArticlesQuery, GetCommentsQuery, GetLikesQuery, CreateCommentMutation, CreateCommentMutationVariables, CreateLikeMutation, CreateLikeMutationVariables, DeleteLikeMutation, DeleteLikeMutationVariables } from '../generated/graphql';
+import { CREATE_COMMENT, CREATE_LIKE, DELETE_LIKE, UPDATE_ARTICLE } from '../graphql/mutations';
+import { GetArticlesQuery, GetCommentsQuery, GetLikesQuery, CreateCommentMutation, CreateCommentMutationVariables, CreateLikeMutation, CreateLikeMutationVariables, DeleteLikeMutation, DeleteLikeMutationVariables, UpdateArticleMutation, UpdateArticleMutationVariables } from '../generated/graphql';
 import { HandThumbUpIcon, ChatBubbleOvalLeftEllipsisIcon, PencilSquareIcon } from '@heroicons/react/24/outline';
 import { jwtDecode } from 'jwt-decode';
 import CreateArticle from './CreateArticle';
@@ -20,15 +20,20 @@ const ArticleList: React.FC = () => {
   const [createComment] = useMutation<CreateCommentMutation, CreateCommentMutationVariables>(CREATE_COMMENT);
   const [createLike] = useMutation<CreateLikeMutation, CreateLikeMutationVariables>(CREATE_LIKE);
   const [deleteLike] = useMutation<DeleteLikeMutation, DeleteLikeMutationVariables>(DELETE_LIKE);
+  const [updateArticle] = useMutation<UpdateArticleMutation, UpdateArticleMutationVariables>(UPDATE_ARTICLE);
 
-  const [articles, setArticles] = useState(data?.getArticles || []);
-  const [sortedArticles, setSortedArticles] = useState(articles);
+  const [articles, setArticles] = useState([]);
   const [commentContent, setCommentContent] = useState('');
   const [commentArticleId, setCommentArticleId] = useState<string | null>(null);
-  const [comments, setComments] = useState(commentsData?.getComments || []);
-  const [likes, setLikes] = useState(likesData?.getLikes || []);
+  const [comments, setComments] = useState([]);
+  const [likes, setLikes] = useState([]);
   const [sortOrder, setSortOrder] = useState('asc');
   const [authorFilter, setAuthorFilter] = useState('');
+  const [editingArticleId, setEditingArticleId] = useState<string | null>(null);
+  const [editingTitle, setEditingTitle] = useState('');
+  const [editingContent, setEditingContent] = useState('');
+  const [sortedArticles, setSortedArticles] = useState(articles);
+
 
   useEffect(() => {
     if (data) {
@@ -119,6 +124,33 @@ const ArticleList: React.FC = () => {
     setArticles([newArticle, ...articles]);
   };
 
+  const handleEditArticle = (articleId: string, title: string, content: string) => {
+    setEditingArticleId(articleId);
+    setEditingTitle(title);
+    setEditingContent(content);
+  };
+
+  const handleUpdateArticle = async (e: React.FormEvent) => {
+    e.preventDefault();
+    try {
+      const { data } = await updateArticle({
+        variables: { updateArticleId: editingArticleId!, title: editingTitle, content: editingContent }
+      });
+      if (data?.updateArticle.success && data.updateArticle.article) {
+        setArticles(articles.map(article =>
+          article.id === editingArticleId ? data.updateArticle.article : article
+        ));
+        setEditingArticleId(null);
+        setEditingTitle('');
+        setEditingContent('');
+      } else {
+        alert(data?.updateArticle.message);
+      }
+    } catch (err) {
+      console.error('Error updating article:', err);
+    }
+  };
+
   const filteredArticles = sortedArticles.filter(article => article.User.username.toLowerCase().includes(authorFilter.toLowerCase()));
 
   if (loading) return <p>Loading...</p>;
@@ -154,55 +186,75 @@ const ArticleList: React.FC = () => {
 
       {filteredArticles.map(article => (
         <div key={article.id} className="bg-white shadow-md rounded-lg p-4 mb-4 mx-5">
-          <div className="border-b-4 pb-2">
-            <h2 className="text-xl font-bold">{article.title}</h2>
-            <p className="text-sm text-gray-500">Posted by {article.User.username}</p>
-            <p className="mt-1">{article.content}</p>
-          </div>
-          
-          <div className="flex justify-around mt-3">
-            <button className="flex" onClick={() => handleLike(article.id)}>
-              <HandThumbUpIcon className="h-8 w-8" />
-              <span className="my-auto ml-1">
-                {likes.filter(like => like.articleId === article.id).length}
-              </span>
-            </button>
-            
-            <button className="flex" onClick={() => setCommentArticleId(commentArticleId === article.id ? null : article.id)}>
-              <ChatBubbleOvalLeftEllipsisIcon className="h-8 w-8" />
-              <span className="my-auto ml-1">
-                {comments.filter(comment => comment.articleId === article.id).length}
-              </span>
-            </button>
-            
-            <button className="flex">
-              <PencilSquareIcon className="h-8 w-8" />
-              <span className="my-auto ml-1">Modifier</span>
-            </button>
-          </div>
-          
-          {commentArticleId === article.id && (
-            <div className="mt-4">
-              <form onSubmit={(e) => { e.preventDefault(); handleCommentSubmit(article.id); }}>
-                <textarea
-                  placeholder="Votre commentaire"
-                  className="w-full p-2 mb-2 border rounded"
-                  value={commentContent}
-                  onChange={(e) => setCommentContent(e.target.value)}
-                />
-                <button type="submit" className="w-full bg-blue-600 text-white py-2 rounded-md hover:bg-blue-700">
-                  Ajouter un commentaire
-                </button>
-              </form>
-              <div className="mt-4">
-                <h3 className="text-lg font-bold">Commentaires</h3>
-                {comments.filter(comment => comment.articleId === article.id).map(comment => (
-                  <div key={comment.id} className="mt-2 bg-gray-100 p-2 rounded">
-                    <p><strong>{comment.User.username}:</strong> {comment.content}</p>
-                  </div>
-                ))}
+          {editingArticleId === article.id ? (
+            <form onSubmit={handleUpdateArticle}>
+              <input
+                type="text"
+                className="w-full p-2 mb-2 border rounded"
+                value={editingTitle}
+                onChange={(e) => setEditingTitle(e.target.value)}
+              />
+              <textarea
+                className="w-full p-2 mb-2 border rounded"
+                value={editingContent}
+                onChange={(e) => setEditingContent(e.target.value)}
+              />
+              <button type="submit" className="w-full bg-green-600 text-white py-2 rounded-md hover:bg-green-700">Update Article</button>
+              <button type="button" className="w-full bg-red-600 text-white py-2 rounded-md hover:bg-red-700 mt-2" onClick={() => setEditingArticleId(null)}>Cancel</button>
+            </form>
+          ) : (
+            <>
+              <div className="border-b-4 pb-2">
+                <h2 className="text-xl font-bold">{article.title}</h2>
+                <p className="text-sm text-gray-500">Posted by {article.User.username}</p>
+                <p className="mt-1">{article.content}</p>
               </div>
-            </div>
+              
+              <div className="flex justify-around mt-3">
+                <button className="flex" onClick={() => handleLike(article.id)}>
+                  <HandThumbUpIcon className="h-8 w-8" />
+                  <span className="my-auto ml-1">
+                    {likes.filter(like => like.articleId === article.id).length}
+                  </span>
+                </button>
+                
+                <button className="flex" onClick={() => setCommentArticleId(commentArticleId === article.id ? null : article.id)}>
+                  <ChatBubbleOvalLeftEllipsisIcon className="h-8 w-8" />
+                  <span className="my-auto ml-1">
+                    {comments.filter(comment => comment.articleId === article.id).length}
+                  </span>
+                </button>
+                
+                <button className="flex" onClick={() => handleEditArticle(article.id, article.title, article.content)}>
+                  <PencilSquareIcon className="h-8 w-8" />
+                  <span className="my-auto ml-1">Modifier</span>
+                </button>
+              </div>
+              
+              {commentArticleId === article.id && (
+                <div className="mt-4">
+                  <form onSubmit={(e) => { e.preventDefault(); handleCommentSubmit(article.id); }}>
+                    <textarea
+                      placeholder="Votre commentaire"
+                      className="w-full p-2 mb-2 border rounded"
+                      value={commentContent}
+                      onChange={(e) => setCommentContent(e.target.value)}
+                    />
+                    <button type="submit" className="w-full bg-blue-600 text-white py-2 rounded-md hover:bg-blue-700">
+                      Ajouter un commentaire
+                    </button>
+                  </form>
+                  <div className="mt-4">
+                    <h3 className="text-lg font-bold">Commentaires</h3>
+                    {comments.filter(comment => comment.articleId === article.id).map(comment => (
+                      <div key={comment.id} className="mt-2 bg-gray-100 p-2 rounded">
+                        <p><strong>{comment.User.username}:</strong> {comment.content}</p>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
+            </>
           )}
         </div>
       ))}

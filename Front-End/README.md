@@ -30,6 +30,6 @@ Interaction avec les Articles
 
 Navigation et Filtrage
 - [x] Vue d'ensemble des derniers articles sur la page principale
-- [ ] Filtre des articles par auteur
+- [x] Filtre des articles par auteur
 - [x] Filtre des articles par popularité (ascendant / descendant nombre de likes)
 

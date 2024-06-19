@@ -102,3 +102,63 @@ export const DELETE_LIKE = gql`
     }
   }
 `;
+
+export const UPDATE_ARTICLE = gql`
+  mutation UpdateArticle($updateArticleId: ID!, $title: String, $content: String) {
+    updateArticle(id: $updateArticleId, title: $title, content: $content) {
+      code
+      message
+      success
+      article {
+        id
+        title
+        content
+        likes {
+          id
+          userId
+          articleId
+        }
+        User {
+          id
+          username
+        }
+        comments {
+          id
+          content
+          userId
+          articleId
+        }
+      }
+    }
+  }
+`;
+
+export const DELETE_ARTICLE = gql`
+  mutation DeleteArticle($deleteArticleId: ID!) {
+    deleteArticle(id: $deleteArticleId) {
+      code
+      message
+      success
+      article {
+        id
+        title
+        content
+        likes {
+          id
+          userId
+          articleId
+        }
+        User {
+          id
+          username
+        }
+        comments {
+          id
+          content
+          userId
+          articleId
+        }
+      }
+    }
+  }
+`;
