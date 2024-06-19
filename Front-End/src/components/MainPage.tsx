@@ -7,6 +7,7 @@ import { UserIcon, DocumentTextIcon, ChatBubbleLeftRightIcon, CalendarDaysIcon, 
 import { jwtDecode } from 'jwt-decode';
 import ArticleList from './ArticleList';
 import CreateArticle from './CreateArticle';
+import UserList from './UserList';
 
 interface DecodedToken {
   id: string;
@@ -48,30 +49,34 @@ const MainPage: React.FC = () => {
             <img className="h-12 w-12 object-cover rounded-full mr-3" src={userProfileImage} alt="Profile" />
             <div className="flex flex-col">
               <h4 className="font-bold">{username}</h4>
-              <Link to="/profile" className="text-blue-500 hover:underline">Voir mon profil</Link>
+              <Link to="#" className="text-blue-500 hover:underline cursor-not-allowed">Voir mon profil</Link>
             </div>
           </div>
-          <div className="mt-3 p-2">
+          <div className="mt-3 p-2 border-b-2">
             <Link className="flex my-1 rounded-md p-1 hover:bg-slate-300" to="#">
               <DocumentTextIcon className="h-6 w-6 text-[#385999]" />
               <h5 className="my-auto ml-2">Flux d'actualités</h5>
             </Link>
-            <Link className="flex my-1 rounded-md p-1 hover:bg-slate-300" to="#">
+            <Link className="flex my-1 rounded-md p-1 hover:bg-slate-300 cursor-not-allowed" to="#">
               <ChatBubbleLeftRightIcon className="h-6 w-6 text-[#385999]" />
               <h5 className="my-auto ml-2">Messages</h5>
             </Link>
-            <Link className="flex my-1 rounded-md p-1 hover:bg-slate-300" to="#">
+            <Link className="flex my-1 rounded-md p-1 hover:bg-slate-300 cursor-not-allowed" to="#">
               <CalendarDaysIcon className="h-6 w-6 text-[#385999]" />
               <h5 className="my-auto ml-2">Evenements</h5>
             </Link>
-            <Link className="flex my-1 rounded-md p-1 hover:bg-slate-300" to="#">
+            <Link className="flex my-1 rounded-md p-1 hover:bg-slate-300 cursor-not-allowed" to="#">
               <PhotoIcon className="h-6 w-6 text-[#385999]" />
               <h5 className="my-auto ml-2">Photos</h5>
             </Link>
-            <Link className="flex my-1 rounded-md p-1 hover:bg-slate-300" to="#">
+            <Link className="flex my-1 rounded-md p-1 hover:bg-slate-300 cursor-not-allowed" to="#">
               <UsersIcon className="h-6 w-6 text-[#385999]" />
               <h5 className="my-auto ml-2">Amis</h5>
             </Link>
+          </div>
+          <div className="p-2">
+            <h5 className="text-slate-400 mb-2">Suggestion d'amis</h5>
+            <UserList />
           </div>
         </div>
 

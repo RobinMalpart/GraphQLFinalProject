@@ -9,22 +9,51 @@ export const GET_USERS = gql`
   }
 `;
 
+
 export const GET_ARTICLES = gql`
   query GetArticles {
     getArticles {
       id
       title
       content
+      likes {
+        id
+        userId
+        articleId
+        User {
+          id
+          username
+        }
+      }
+      User {
+        id
+        username
+      }
+      comments {
+        id
+        content
+        userId
+        articleId
+        User {
+          id
+          username
+        }
+      }
     }
   }
 `;
 
-export const GET_ARTICLE = gql`
-  query GetArticle($id: ID!) {
-    getArticle(id: $id) {
+export const GET_COMMENTS = gql`
+  query GetComments {
+    getComments {
       id
-      title
       content
+      userId
+      articleId
+      User {
+        id
+        username
+      }
     }
   }
 `;

@@ -22,16 +22,16 @@ const Home: React.FC = () => {
                 </div>            
                 <div className='flex-col inline-flex w-1/2 justify-end'>
                     <div className='w-1/3 h-3/4 flex flex-col justify-center mx-auto my-auto'>
-                        <li className="py-2 px-3 bg-slate-100 hover:bg-slate-200 inline rounded-md mt-4">
-                            <Link className="text-blue-500 hover:underline" to="/signup">
+                        <Link className="py-2 px-3 w-full bg-blue-600 text-white rounded-md hover:bg-blue-700 inline mt-4" to="/signup">
+                            <li className="hover:underline">
                                 <UserIcon className="h-5 w-5 inline mr-1" /><span className='my-auto'>Sign Up</span>
-                            </Link>
-                        </li>
-                        <li className="py-2 px-3 bg-slate-100 hover:bg-slate-200 inline rounded-md mt-4">
-                            <Link className="text-blue-500 hover:underline" to="/login">
+                            </li>
+                        </Link>
+                        <Link className="py-2 px-3 w-full bg-blue-600 text-white rounded-md hover:bg-blue-700 inline mt-4" to="/login">
+                            <li className="hover:underline">
                                 <UserIcon className="h-5 w-5 inline mr-1" /><span className='my-auto'>Login</span>
-                            </Link>
-                        </li>
+                            </li>
+                        </Link>
                     </div>
                 </div>
             </div> 
