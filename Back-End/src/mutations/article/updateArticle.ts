@@ -17,6 +17,16 @@ export const updateArticle: MutationResolvers['updateArticle'] = async (_, { id,
       data: updateData,
       include: {
         User: true,
+        likes: {
+          include: {
+            User: true,
+          },
+        },
+        comments: {
+          include: {
+            User: true,
+          },
+        },
       },
     });
 
@@ -32,6 +42,8 @@ export const updateArticle: MutationResolvers['updateArticle'] = async (_, { id,
           id: updatedArticle.User.id,
           username: updatedArticle.User.username,
         },
+        likes: updatedArticle.likes,
+        comments: updatedArticle.comments,
       },
     };
   } catch (e) {

@@ -1,5 +1,10 @@
 import { MutationResolvers } from "../../types.js";
-
+interface PrismaError extends Error {
+  code: string;
+  meta?: {
+    target: string[];
+  };
+}
 export const createLike: MutationResolvers['createLike'] = async (_, { userId, articleId }, { dataSources }) => {
   try {
     const createdLike = await dataSources.db.like.create({
@@ -17,7 +22,6 @@ export const createLike: MutationResolvers['createLike'] = async (_, { userId, a
       },
       include: {
         User: true,
-        Article: true,
       },
     });
 
@@ -32,21 +36,27 @@ export const createLike: MutationResolvers['createLike'] = async (_, { userId, a
         User: {
           id: createdLike.User.id,
           username: createdLike.User.username,
-        },
-        Article: {
-          id: createdLike.Article.id,
-          title: createdLike.Article.title,
-          content: createdLike.Article.content,
-        },
+        }
       },
     };
-  } catch (e) {
-    console.error('Error creating like:', e);
-    return {
-      code: 403,
-      message: 'Like has not been created',
-      success: false,
-      like: null,
-    };
+  } 
+  catch (e) {
+    const prismaError = e as PrismaError;
+    if (prismaError.code === 'P2002' ) {
+      return {
+        code: 409,
+        message: 'User has already liked this article',
+        success: false,
+        like: null,
+      };
+    } else {
+      console.error('Error creating like:', e);
+      return {
+        code: 403,
+        message: 'Like has not been created',
+        success: false,
+        like: null,
+      };
+    }
   }
 };
