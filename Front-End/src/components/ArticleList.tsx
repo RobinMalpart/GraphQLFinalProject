@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { useQuery, useMutation } from '@apollo/client';
-import { GET_ARTICLES, GET_COMMENTS } from '../graphql/queries';
+import { GET_ARTICLES, GET_COMMENTS, GET_LIKES } from '../graphql/queries';
 import { CREATE_COMMENT, CREATE_LIKE, DELETE_LIKE } from '../graphql/mutations';
-import { GetArticlesQuery, GetCommentsQuery, CreateCommentMutation, CreateCommentMutationVariables, CreateLikeMutation, CreateLikeMutationVariables, DeleteLikeMutation, DeleteLikeMutationVariables } from '../generated/graphql';
+import { GetArticlesQuery, GetCommentsQuery, GetLikesQuery, CreateCommentMutation, CreateCommentMutationVariables, CreateLikeMutation, CreateLikeMutationVariables, DeleteLikeMutation, DeleteLikeMutationVariables } from '../generated/graphql';
 import { HandThumbUpIcon, ChatBubbleOvalLeftEllipsisIcon, PencilSquareIcon } from '@heroicons/react/24/outline';
 import { jwtDecode } from 'jwt-decode';
 
@@ -15,6 +15,7 @@ interface DecodedToken {
 const ArticleList: React.FC = () => {
   const { loading, error, data } = useQuery<GetArticlesQuery>(GET_ARTICLES);
   const { data: commentsData } = useQuery<GetCommentsQuery>(GET_COMMENTS);
+  const { data: likesData } = useQuery<GetLikesQuery>(GET_LIKES);
   const [createComment] = useMutation<CreateCommentMutation, CreateCommentMutationVariables>(CREATE_COMMENT);
   const [createLike] = useMutation<CreateLikeMutation, CreateLikeMutationVariables>(CREATE_LIKE);
   const [deleteLike] = useMutation<DeleteLikeMutation, DeleteLikeMutationVariables>(DELETE_LIKE);
@@ -22,7 +23,7 @@ const ArticleList: React.FC = () => {
   const [commentContent, setCommentContent] = useState('');
   const [commentArticleId, setCommentArticleId] = useState<string | null>(null);
   const [comments, setComments] = useState(commentsData?.getComments || []);
-  const [likes, setLikes] = useState(data?.getLikes || []);
+  const [likes, setLikes] = useState(likesData?.getLikes || []);
   const [sortOrder, setSortOrder] = useState('asc');
   const [sortedArticles, setSortedArticles] = useState(data?.getArticles || []);
 
@@ -42,6 +43,12 @@ const ArticleList: React.FC = () => {
       setComments(commentsData.getComments);
     }
   }, [commentsData]);
+
+  useEffect(() => {
+    if (likesData) {
+      setLikes(likesData.getLikes);
+    }
+  }, [likesData]);
 
   const handleCommentSubmit = async (articleId: string) => {
     const token = localStorage.getItem('token');

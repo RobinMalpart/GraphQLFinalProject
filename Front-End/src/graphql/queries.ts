@@ -57,3 +57,17 @@ export const GET_COMMENTS = gql`
     }
   }
 `;
+
+export const GET_LIKES = gql`
+  query GetLikes {
+    getLikes {
+      id
+      userId
+      articleId
+      User {
+        id
+        username
+      }
+    }
+  }
+`;

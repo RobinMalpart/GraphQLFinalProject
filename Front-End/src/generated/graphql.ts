@@ -272,6 +272,11 @@ export type GetCommentsQueryVariables = Exact<{ [key: string]: never; }>;
 
 export type GetCommentsQuery = { __typename?: 'Query', getComments: Array<{ __typename?: 'Comment', id: string, content: string, userId: string, articleId: string, User: { __typename?: 'User', id: string, username: string } }> };
 
+export type GetLikesQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type GetLikesQuery = { __typename?: 'Query', getLikes: Array<{ __typename?: 'Like', id: string, userId: string, articleId: string, User: { __typename?: 'User', id: string, username: string } }> };
+
 
 export const MutationDocument = gql`
     mutation Mutation($title: String!, $content: String!, $userId: ID!) {
@@ -622,3 +627,36 @@ export function useGetCommentsLazyQuery(options: VueApolloComposable.UseQueryOpt
   return VueApolloComposable.useLazyQuery<GetCommentsQuery, GetCommentsQueryVariables>(GetCommentsDocument, {}, options);
 }
 export type GetCommentsQueryCompositionFunctionResult = VueApolloComposable.UseQueryReturn<GetCommentsQuery, GetCommentsQueryVariables>;
+export const GetLikesDocument = gql`
+    query GetLikes {
+  getLikes {
+    id
+    userId
+    articleId
+    User {
+      id
+      username
+    }
+  }
+}
+    `;
+
+/**
+ * __useGetLikesQuery__
+ *
+ * To run a query within a Vue component, call `useGetLikesQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetLikesQuery` returns an object from Apollo Client that contains result, loading and error properties
+ * you can use to render your UI.
+ *
+ * @param options that will be passed into the query, supported options are listed on: https://v4.apollo.vuejs.org/guide-composable/query.html#options;
+ *
+ * @example
+ * const { result, loading, error } = useGetLikesQuery();
+ */
+export function useGetLikesQuery(options: VueApolloComposable.UseQueryOptions<GetLikesQuery, GetLikesQueryVariables> | VueCompositionApi.Ref<VueApolloComposable.UseQueryOptions<GetLikesQuery, GetLikesQueryVariables>> | ReactiveFunction<VueApolloComposable.UseQueryOptions<GetLikesQuery, GetLikesQueryVariables>> = {}) {
+  return VueApolloComposable.useQuery<GetLikesQuery, GetLikesQueryVariables>(GetLikesDocument, {}, options);
+}
+export function useGetLikesLazyQuery(options: VueApolloComposable.UseQueryOptions<GetLikesQuery, GetLikesQueryVariables> | VueCompositionApi.Ref<VueApolloComposable.UseQueryOptions<GetLikesQuery, GetLikesQueryVariables>> | ReactiveFunction<VueApolloComposable.UseQueryOptions<GetLikesQuery, GetLikesQueryVariables>> = {}) {
+  return VueApolloComposable.useLazyQuery<GetLikesQuery, GetLikesQueryVariables>(GetLikesDocument, {}, options);
+}
+export type GetLikesQueryCompositionFunctionResult = VueApolloComposable.UseQueryReturn<GetLikesQuery, GetLikesQueryVariables>;
