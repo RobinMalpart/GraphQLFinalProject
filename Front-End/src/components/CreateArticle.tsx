@@ -10,8 +10,20 @@ interface DecodedToken {
   iat: number;
 }
 
+interface User {
+  username: string;
+  id: string;
+}
+
+interface Article {
+  id: string;
+  title: string;
+  content: string;
+  User: User;
+}
+
 interface CreateArticleProps {
-  onAddArticle: (article: { id: string, title: string, content: string, User: { username: string, id: string } }) => void;
+  onAddArticle: (article: Article) => void;
 }
 
 const CreateArticle: React.FC<CreateArticleProps> = ({ onAddArticle }) => {
@@ -21,7 +33,7 @@ const CreateArticle: React.FC<CreateArticleProps> = ({ onAddArticle }) => {
 
   let userId = '';
   if (token) {
-    const decoded: DecodedToken = jwtDecode(token as string);
+    const decoded: DecodedToken = jwtDecode<DecodedToken>(token);
     userId = decoded.id;
   }
 
@@ -47,9 +59,11 @@ const CreateArticle: React.FC<CreateArticleProps> = ({ onAddArticle }) => {
     <div className="bg-white shadow-md rounded-lg p-4 mb-4 mx-5">
       <h2 className="text-xl font-bold mb-4">Quoi de neuf ?</h2>
       <form onSubmit={handleSubmit}>
-        <input type="text" placeholder="Titre de l'article" className="w-full p-2 mb-2 border rounded" value={title} onChange={(e) => setTitle(e.target.value)}/>
-        <textarea placeholder="Contenu de l'article" className="w-full p-2 mb-2 border rounded" value={content} onChange={(e) => setContent(e.target.value)}></textarea>
-        <button type="submit" className="w-full bg-blue-600 text-white py-2 rounded-md hover:bg-blue-700" disabled={loading}>Créer le post</button>
+        <input type="text" placeholder="Titre de l'article" className="w-full p-2 mb-2 border rounded" value={title} onChange={(e) => setTitle(e.target.value)} />
+        <textarea placeholder="Contenu de l'article" className="w-full p-2 mb-2 border rounded" value={content} onChange={(e) => setContent(e.target.value)} />
+        <button type="submit" className="w-full bg-blue-600 text-white py-2 rounded-md hover:bg-blue-700" disabled={loading} >
+          Créer le post
+        </button>
         {error && <p className="text-red-500 mt-4">{error.message}</p>}
       </form>
     </div>

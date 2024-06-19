@@ -35,6 +35,13 @@ const ArticleList: React.FC = () => {
   const [editingContent, setEditingContent] = useState('');
   const [sortedArticles, setSortedArticles] = useState<GetArticlesQuery['getArticles']>([]);
 
+  const token = localStorage.getItem('token');
+  let userId = '';
+  if (token) {
+    const decoded: DecodedToken = jwtDecode(token);
+    userId = decoded.id;
+  }
+
   useEffect(() => {
     if (data?.getArticles) {
       setArticles(data.getArticles);
@@ -63,63 +70,51 @@ const ArticleList: React.FC = () => {
   }, [likes, sortOrder, articles]);
 
   const handleCommentSubmit = async (articleId: string) => {
-    const token = localStorage.getItem('token');
-    if (token) {
-      const decoded: DecodedToken = jwtDecode(token);
-      const userId = decoded.id;
-
-      if (userId && commentContent) {
-        try {
-          const { data } = await createComment({
-            variables: { content: commentContent, userId, articleId }
-          });
-          if (data?.createComment.success && data.createComment.comment) {
-            setComments([...comments, data.createComment.comment]);
-            setCommentContent('');
-          } else {
-            alert(data?.createComment.message);
-          }
-        } catch (err) {
-          console.error('Error creating comment:', err);
+    if (userId && commentContent) {
+      try {
+        const { data } = await createComment({
+          variables: { content: commentContent, userId, articleId }
+        });
+        if (data?.createComment.success && data.createComment.comment) {
+          setComments([...comments, data.createComment.comment]);
+          setCommentContent('');
+        } else {
+          alert(data?.createComment.message);
         }
+      } catch (err) {
+        console.error('Error creating comment:', err);
       }
     }
   };
 
   const handleLike = async (articleId: string) => {
-    const token = localStorage.getItem('token');
-    if (token) {
-      const decoded: DecodedToken = jwtDecode(token);
-      const userId = decoded.id;
+    const existingLike = likes.find(like => like.articleId === articleId && like.userId === userId);
 
-      const existingLike = likes.find(like => like.articleId === articleId && like.userId === userId);
-
-      if (existingLike) {
-        try {
-          const { data } = await deleteLike({
-            variables: { deleteLikeId: existingLike.id }
-          });
-          if (data?.deleteLike.success) {
-            setLikes(likes.filter(like => like.id !== existingLike.id));
-          } else {
-            alert(data?.deleteLike.message);
-          }
-        } catch (err) {
-          console.error('Error deleting like:', err);
+    if (existingLike) {
+      try {
+        const { data } = await deleteLike({
+          variables: { deleteLikeId: existingLike.id }
+        });
+        if (data?.deleteLike.success) {
+          setLikes(likes.filter(like => like.id !== existingLike.id));
+        } else {
+          alert(data?.deleteLike.message);
         }
-      } else {
-        try {
-          const { data } = await createLike({
-            variables: { userId, articleId }
-          });
-          if (data?.createLike.success && data.createLike.like) {
-            setLikes([...likes, data.createLike.like]);
-          } else {
-            alert(data?.createLike.message);
-          }
-        } catch (err) {
-          console.error('Error creating like:', err);
+      } catch (err) {
+        console.error('Error deleting like:', err);
+      }
+    } else {
+      try {
+        const { data } = await createLike({
+          variables: { userId, articleId }
+        });
+        if (data?.createLike.success && data.createLike.like) {
+          setLikes([...likes, data.createLike.like]);
+        } else {
+          alert(data?.createLike.message);
         }
+      } catch (err) {
+        console.error('Error creating like:', err);
       }
     }
   };
@@ -245,10 +240,12 @@ const ArticleList: React.FC = () => {
                   </span>
                 </button>
                 
-                <button className="flex" onClick={() => handleEditArticle(article.id, article.title, article.content)}>
-                  <PencilSquareIcon className="h-8 w-8" />
-                  <span className="my-auto ml-1">Modifier</span>
-                </button>
+                {article.User.id === userId && (
+                  <button className="flex" onClick={() => handleEditArticle(article.id, article.title, article.content)}>
+                    <PencilSquareIcon className="h-8 w-8" />
+                    <span className="my-auto ml-1">Modifier</span>
+                  </button>
+                )}
               </div>
               
               {commentArticleId === article.id && (

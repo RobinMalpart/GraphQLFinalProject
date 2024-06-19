@@ -1,7 +1,7 @@
 import React from 'react';
 import logo from '../assets/logo.png';
 import { UsersIcon, ChatBubbleLeftRightIcon, GlobeAmericasIcon, MagnifyingGlassIcon } from '@heroicons/react/24/outline';
-import LoggoutButton from './LogoutButton';
+import LogoutButton from './LogoutButton';
 import { Link } from 'react-router-dom';
   
   const Header: React.FC = () => {
@@ -31,7 +31,7 @@ import { Link } from 'react-router-dom';
                 <div className="inline-flex flex-row my-auto">
                     <button className="bg-[#3b5998] text-white">Home</button>
                     <button className="bg-[#3b5998] text-white mx-3 cursor-not-allowed">Profile</button>
-                    <LoggoutButton />
+                    <LogoutButton />
                 </div>
             </div>
     </header>
