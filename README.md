@@ -10,8 +10,6 @@
 2. Installer et démarrer le Front-End (Client) :
 [Documentation Front-End](Front-End/README.md)
 
----
-
 ## Tâches
 
 ### Authentification des Utilisateurs
