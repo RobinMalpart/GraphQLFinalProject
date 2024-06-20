@@ -1,4 +1,4 @@
-# Front-End
+# Back-End
 
 ## Comment lancer le projet
 
@@ -9,16 +9,15 @@
 
 2. Démarrer le serveur :
     ```bash
-    npm run start
+    npm start
     ```
 
 3. Ouvrir un navigateur et accéder à l'adresse suivante :
     ```
-    http://localhost:5173
+    http://localhost:4000
     ```
 
 ## Technologies utilisées
 - TypeScript (avec ESLint & Prettier)
-- React (avec React Router & Vite)
-- Tailwind CSS
-- GraphQL (avec Apollo Client)
+- Node.js
+- GraphQL (avec Prisma)
