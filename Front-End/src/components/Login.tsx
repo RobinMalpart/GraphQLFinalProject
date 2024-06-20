@@ -17,7 +17,7 @@ const Login: React.FC = () => {
       const { data } = await signIn({ variables: { username, password } });
       if (data?.signIn.success) {
         localStorage.setItem('token', data.signIn.token as string);
-        navigate('/articles');
+        navigate('/');
       } else {
         alert(data?.signIn.message);
       }

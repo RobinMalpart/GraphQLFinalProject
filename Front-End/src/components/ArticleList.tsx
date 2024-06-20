@@ -174,45 +174,27 @@ const ArticleList: React.FC = () => {
     <div className="col-span-2 mt-5 flex flex-col">
       <CreateArticle onAddArticle={handleAddArticle} />
 
-      <div className="mb-4">
-        <label htmlFor="authorFilter" className="block text-sm font-medium text-gray-700">Filter by Author</label>
-        <input
-          type="text"
-          id="authorFilter"
-          className="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm rounded-md"
-          value={authorFilter}
-          onChange={(e) => setAuthorFilter(e.target.value)}
-        />
-      </div>
+      <div className="flex mx-5 justify-between">
+        <div className="mb-4">
+          <label htmlFor="authorFilter" className="block text-sm font-medium text-gray-700">Filter by Author</label>
+          <input type="text" id="authorFilter" className="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm rounded-md" value={authorFilter} onChange={(e) => setAuthorFilter(e.target.value)} />
+        </div>
 
-      <div className="mb-4">
-        <label htmlFor="sortOrder" className="block text-sm font-medium text-gray-700">Sort by Likes</label>
-        <select
-          id="sortOrder"
-          className="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm rounded-md"
-          value={sortOrder}
-          onChange={(e) => setSortOrder(e.target.value)}
-        >
-          <option value="asc">Croissant</option>
-          <option value="desc">Décroissant</option>
-        </select>
+        <div className="mb-4">
+          <label htmlFor="sortOrder" className="block text-sm font-medium text-gray-700">Sort by Likes</label>
+          <select id="sortOrder" className="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm rounded-md" value={sortOrder} onChange={(e) => setSortOrder(e.target.value)} >
+            <option value="asc">Croissant</option>
+            <option value="desc">Décroissant</option>
+          </select>
+        </div>
       </div>
 
       {filteredArticles.map(article => (
         <div key={article.id} className="bg-white shadow-md rounded-lg p-4 mb-4 mx-5">
           {editingArticleId === article.id ? (
             <form onSubmit={handleUpdateArticle}>
-              <input
-                type="text"
-                className="w-full p-2 mb-2 border rounded"
-                value={editingTitle}
-                onChange={(e) => setEditingTitle(e.target.value)}
-              />
-              <textarea
-                className="w-full p-2 mb-2 border rounded"
-                value={editingContent}
-                onChange={(e) => setEditingContent(e.target.value)}
-              />
+              <input type="text" className="w-full p-2 mb-2 border rounded" value={editingTitle} onChange={(e) => setEditingTitle(e.target.value)} />
+              <textarea className="w-full p-2 mb-2 border rounded" value={editingContent} onChange={(e) => setEditingContent(e.target.value)} />
               <button type="submit" className="w-full bg-green-600 text-white py-2 rounded-md hover:bg-green-700">Mettre à jour le post</button>
               <button type="button" className="w-full bg-red-600 text-white py-2 rounded-md hover:bg-red-700 mt-2" onClick={() => setEditingArticleId(null)}>Annuler</button>
               <button type="button" className="w-full bg-red-600 text-white py-2 rounded-md hover:bg-red-700 mt-2" onClick={() => handleDeleteArticle(article.id)}>Supprimer</button>
@@ -251,12 +233,7 @@ const ArticleList: React.FC = () => {
               {commentArticleId === article.id && (
                 <div className="mt-4">
                   <form onSubmit={(e) => { e.preventDefault(); handleCommentSubmit(article.id); }}>
-                    <textarea
-                      placeholder="Votre commentaire"
-                      className="w-full p-2 mb-2 border rounded"
-                      value={commentContent}
-                      onChange={(e) => setCommentContent(e.target.value)}
-                    />
+                    <textarea placeholder="Votre commentaire" className="w-full p-2 mb-2 border rounded" value={commentContent} onChange={(e) => setCommentContent(e.target.value)} />
                     <button type="submit" className="w-full bg-blue-600 text-white py-2 rounded-md hover:bg-blue-700">
                       Ajouter un commentaire
                     </button>
