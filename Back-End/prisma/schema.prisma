@@ -1,0 +1,52 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = "file:./dev.db"
+}
+
+
+model User {
+  id        String     @id @unique @default(uuid())
+  username  String     @unique
+  password  String
+  articles  Article[] @relation("UserArticles")
+  likes     Like[]    @relation("UserLikes")
+  comments  Comment[] @relation("UserComments")
+  
+}
+model Article {
+  id        String   @id @unique @default(uuid())
+  title     String
+  content   String
+  userId    String
+  User      User     @relation(fields: [userId], references: [id], name: "UserArticles")
+  comments  Comment[] @relation("ArticleComments")
+  likes     Like[]    @relation("ArticleLikes")
+}
+
+model Comment {
+  id        String   @id @unique @default(uuid())
+  content   String
+  articleId String
+  Article   Article  @relation(fields: [articleId], references: [id], name: "ArticleComments", onDelete: Cascade)
+  userId    String
+  User      User     @relation(fields: [userId], references: [id], name: "UserComments")
+}
+
+model Like {
+  id        String   @id @unique @default(uuid())
+  userId    String
+  articleId String
+  User      User     @relation(fields: [userId], references: [id], name: "UserLikes")
+  Article   Article  @relation(fields: [articleId], references: [id], name: "ArticleLikes", onDelete: Cascade)
+  @@unique([userId, articleId])
+}
