@@ -5,10 +5,10 @@
 ### Lancer le projet :
 
 1. Installer et démarrer le Back-End (Server) :
-[Documentation Back-End](Back-End/README.md)
+[Documentation Back-End](Back-End/)
 
 2. Installer et démarrer le Front-End (Client) :
-[Documentation Front-End](Front-End/README.md)
+[Documentation Front-End](Front-End/)
 
 ## Tâches
 
