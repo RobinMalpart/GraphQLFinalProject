@@ -1,7 +1,7 @@
 import { gql } from '@apollo/client';
 
 export const CREATE_ARTICLE = gql`
-  mutation CreateArticle($title: String!, $content: String!, $userId: ID!) {
+  mutation Mutation($title: String!, $content: String!, $userId: ID!) {
     createArticle(title: $title, content: $content, userId: $userId) {
       code
       message
@@ -10,6 +10,10 @@ export const CREATE_ARTICLE = gql`
         id
         title
         content
+        User {
+          username
+          id
+        }
       }
     }
   }
@@ -49,19 +53,111 @@ export const CREATE_COMMENT = gql`
       comment {
         id
         content
+        userId
+        articleId
+        User {
+          id
+          username
+        }
       }
     }
   }
 `;
 
+
 export const CREATE_LIKE = gql`
   mutation CreateLike($userId: ID!, $articleId: ID!) {
     createLike(userId: $userId, articleId: $articleId) {
+      success
+      message
+      code
+      like {
+        id
+        userId
+        articleId
+        User {
+          id
+          username
+        }
+      }
+    }
+  }
+`;
+
+export const DELETE_LIKE = gql`
+  mutation DeleteLike($deleteLikeId: ID!) {
+    deleteLike(id: $deleteLikeId) {
       code
       message
       success
       like {
         id
+        userId
+        articleId
+        User {
+          id
+          username
+        }
+      }
+    }
+  }
+`;
+
+export const UPDATE_ARTICLE = gql`
+  mutation UpdateArticle($updateArticleId: ID!, $title: String, $content: String) {
+    updateArticle(id: $updateArticleId, title: $title, content: $content) {
+      code
+      message
+      success
+      article {
+        id
+        title
+        content
+        likes {
+          id
+          userId
+          articleId
+        }
+        User {
+          id
+          username
+        }
+        comments {
+          id
+          content
+          userId
+          articleId
+        }
+      }
+    }
+  }
+`;
+
+export const DELETE_ARTICLE = gql`
+  mutation DeleteArticle($deleteArticleId: ID!) {
+    deleteArticle(id: $deleteArticleId) {
+      code
+      message
+      success
+      article {
+        id
+        title
+        content
+        likes {
+          id
+          userId
+          articleId
+        }
+        User {
+          id
+          username
+        }
+        comments {
+          id
+          content
+          userId
+          articleId
+        }
       }
     }
   }

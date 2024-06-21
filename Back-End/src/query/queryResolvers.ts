@@ -3,19 +3,43 @@ import { QueryResolvers } from "../types.js";
 
 export const queryResolvers: QueryResolvers = {
   getArticle: async (_, { id }, { dataSources }) => {
-    return await dataSources.db.article.findUnique({
+    const article = await dataSources.db.article.findUnique({
       where: { id },
       include: {
         User: true,
-        likes: true,
+        comments: {
+          include: {
+            User: true,
+          },
+        },
+        likes: {
+          include: {
+            User: true,
+          },
+        },
       },
     });
+
+    if (!article) {
+      throw new GraphQLError('Article not found');
+    }
+
+    return article;
   },
   getArticles: async (_, __, { dataSources }) => {
     return await dataSources.db.article.findMany({
       include: {
         User: true,
-        likes: true,
+        comments: {
+          include: {
+            User: true,
+          },
+        },
+        likes: {
+          include: {
+            User: true,
+          },
+        },
       },
     });
   },

@@ -20,15 +20,21 @@ export type Scalars = {
 
 export type Article = {
   __typename?: 'Article';
+  User: User;
+  comments: Array<Comment>;
   content: Scalars['String']['output'];
   id: Scalars['ID']['output'];
+  likes: Array<Like>;
   title: Scalars['String']['output'];
 };
 
 export type Comment = {
   __typename?: 'Comment';
+  User: User;
+  articleId: Scalars['ID']['output'];
   content: Scalars['String']['output'];
   id: Scalars['ID']['output'];
+  userId: Scalars['ID']['output'];
 };
 
 export type CreateArticleResponse = {
@@ -63,9 +69,28 @@ export type CreateUserResponse = {
   user?: Maybe<User>;
 };
 
+export type DeleteArticleResponse = {
+  __typename?: 'DeleteArticleResponse';
+  article?: Maybe<Article>;
+  code: Scalars['Int']['output'];
+  message: Scalars['String']['output'];
+  success: Scalars['Boolean']['output'];
+};
+
+export type DeleteLikeResponse = {
+  __typename?: 'DeleteLikeResponse';
+  code: Scalars['Int']['output'];
+  like?: Maybe<Like>;
+  message: Scalars['String']['output'];
+  success: Scalars['Boolean']['output'];
+};
+
 export type Like = {
   __typename?: 'Like';
+  User: User;
+  articleId: Scalars['ID']['output'];
   id: Scalars['ID']['output'];
+  userId: Scalars['ID']['output'];
 };
 
 export type Mutation = {
@@ -74,7 +99,10 @@ export type Mutation = {
   createComment: CreateCommentResponse;
   createLike: CreateLikeResponse;
   createUser: CreateUserResponse;
+  deleteArticle: DeleteArticleResponse;
+  deleteLike: DeleteLikeResponse;
   signIn: SignInResponse;
+  updateArticle: UpdateArticleResponse;
 };
 
 
@@ -104,9 +132,26 @@ export type MutationCreateUserArgs = {
 };
 
 
+export type MutationDeleteArticleArgs = {
+  id: Scalars['ID']['input'];
+};
+
+
+export type MutationDeleteLikeArgs = {
+  id: Scalars['ID']['input'];
+};
+
+
 export type MutationSignInArgs = {
   password: Scalars['String']['input'];
   username: Scalars['String']['input'];
+};
+
+
+export type MutationUpdateArticleArgs = {
+  content?: InputMaybe<Scalars['String']['input']>;
+  id: Scalars['ID']['input'];
+  title?: InputMaybe<Scalars['String']['input']>;
 };
 
 export type Query = {
@@ -149,20 +194,28 @@ export type SignInResponse = {
   token?: Maybe<Scalars['String']['output']>;
 };
 
+export type UpdateArticleResponse = {
+  __typename?: 'UpdateArticleResponse';
+  article?: Maybe<Article>;
+  code: Scalars['Int']['output'];
+  message: Scalars['String']['output'];
+  success: Scalars['Boolean']['output'];
+};
+
 export type User = {
   __typename?: 'User';
   id: Scalars['ID']['output'];
   username: Scalars['String']['output'];
 };
 
-export type CreateArticleMutationVariables = Exact<{
+export type MutationMutationVariables = Exact<{
   title: Scalars['String']['input'];
   content: Scalars['String']['input'];
   userId: Scalars['ID']['input'];
 }>;
 
 
-export type CreateArticleMutation = { __typename?: 'Mutation', createArticle: { __typename?: 'CreateArticleResponse', code: number, message: string, success: boolean, article?: { __typename?: 'Article', id: string, title: string, content: string } | null } };
+export type MutationMutation = { __typename?: 'Mutation', createArticle: { __typename?: 'CreateArticleResponse', code: number, message: string, success: boolean, article?: { __typename?: 'Article', id: string, title: string, content: string, User: { __typename?: 'User', username: string, id: string } } | null } };
 
 export type CreateUserMutationVariables = Exact<{
   username: Scalars['String']['input'];
@@ -187,7 +240,7 @@ export type CreateCommentMutationVariables = Exact<{
 }>;
 
 
-export type CreateCommentMutation = { __typename?: 'Mutation', createComment: { __typename?: 'CreateCommentResponse', code: number, message: string, success: boolean, comment?: { __typename?: 'Comment', id: string, content: string } | null } };
+export type CreateCommentMutation = { __typename?: 'Mutation', createComment: { __typename?: 'CreateCommentResponse', code: number, message: string, success: boolean, comment?: { __typename?: 'Comment', id: string, content: string, userId: string, articleId: string, User: { __typename?: 'User', id: string, username: string } } | null } };
 
 export type CreateLikeMutationVariables = Exact<{
   userId: Scalars['ID']['input'];
@@ -195,7 +248,30 @@ export type CreateLikeMutationVariables = Exact<{
 }>;
 
 
-export type CreateLikeMutation = { __typename?: 'Mutation', createLike: { __typename?: 'CreateLikeResponse', code: number, message: string, success: boolean, like?: { __typename?: 'Like', id: string } | null } };
+export type CreateLikeMutation = { __typename?: 'Mutation', createLike: { __typename?: 'CreateLikeResponse', success: boolean, message: string, code: number, like?: { __typename?: 'Like', id: string, userId: string, articleId: string, User: { __typename?: 'User', id: string, username: string } } | null } };
+
+export type DeleteLikeMutationVariables = Exact<{
+  deleteLikeId: Scalars['ID']['input'];
+}>;
+
+
+export type DeleteLikeMutation = { __typename?: 'Mutation', deleteLike: { __typename?: 'DeleteLikeResponse', code: number, message: string, success: boolean, like?: { __typename?: 'Like', id: string, userId: string, articleId: string, User: { __typename?: 'User', id: string, username: string } } | null } };
+
+export type UpdateArticleMutationVariables = Exact<{
+  updateArticleId: Scalars['ID']['input'];
+  title?: InputMaybe<Scalars['String']['input']>;
+  content?: InputMaybe<Scalars['String']['input']>;
+}>;
+
+
+export type UpdateArticleMutation = { __typename?: 'Mutation', updateArticle: { __typename?: 'UpdateArticleResponse', code: number, message: string, success: boolean, article?: { __typename?: 'Article', id: string, title: string, content: string, likes: Array<{ __typename?: 'Like', id: string, userId: string, articleId: string }>, User: { __typename?: 'User', id: string, username: string }, comments: Array<{ __typename?: 'Comment', id: string, content: string, userId: string, articleId: string }> } | null } };
+
+export type DeleteArticleMutationVariables = Exact<{
+  deleteArticleId: Scalars['ID']['input'];
+}>;
+
+
+export type DeleteArticleMutation = { __typename?: 'Mutation', deleteArticle: { __typename?: 'DeleteArticleResponse', code: number, message: string, success: boolean, article?: { __typename?: 'Article', id: string, title: string, content: string, likes: Array<{ __typename?: 'Like', id: string, userId: string, articleId: string }>, User: { __typename?: 'User', id: string, username: string }, comments: Array<{ __typename?: 'Comment', id: string, content: string, userId: string, articleId: string }> } | null } };
 
 export type GetUsersQueryVariables = Exact<{ [key: string]: never; }>;
 
@@ -205,18 +281,21 @@ export type GetUsersQuery = { __typename?: 'Query', getUsers: Array<{ __typename
 export type GetArticlesQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type GetArticlesQuery = { __typename?: 'Query', getArticles: Array<{ __typename?: 'Article', id: string, title: string, content: string }> };
+export type GetArticlesQuery = { __typename?: 'Query', getArticles: Array<{ __typename?: 'Article', id: string, title: string, content: string, likes: Array<{ __typename?: 'Like', id: string, userId: string, articleId: string, User: { __typename?: 'User', id: string, username: string } }>, User: { __typename?: 'User', id: string, username: string }, comments: Array<{ __typename?: 'Comment', id: string, content: string, userId: string, articleId: string, User: { __typename?: 'User', id: string, username: string } }> }> };
 
-export type GetArticleQueryVariables = Exact<{
-  id: Scalars['ID']['input'];
-}>;
+export type GetCommentsQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type GetArticleQuery = { __typename?: 'Query', getArticle?: { __typename?: 'Article', id: string, title: string, content: string } | null };
+export type GetCommentsQuery = { __typename?: 'Query', getComments: Array<{ __typename?: 'Comment', id: string, content: string, userId: string, articleId: string, User: { __typename?: 'User', id: string, username: string } }> };
+
+export type GetLikesQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export const CreateArticleDocument = gql`
-    mutation CreateArticle($title: String!, $content: String!, $userId: ID!) {
+export type GetLikesQuery = { __typename?: 'Query', getLikes: Array<{ __typename?: 'Like', id: string, userId: string, articleId: string, User: { __typename?: 'User', id: string, username: string } }> };
+
+
+export const MutationDocument = gql`
+    mutation Mutation($title: String!, $content: String!, $userId: ID!) {
   createArticle(title: $title, content: $content, userId: $userId) {
     code
     message
@@ -225,23 +304,27 @@ export const CreateArticleDocument = gql`
       id
       title
       content
+      User {
+        username
+        id
+      }
     }
   }
 }
     `;
 
 /**
- * __useCreateArticleMutation__
+ * __useMutationMutation__
  *
- * To run a mutation, you first call `useCreateArticleMutation` within a Vue component and pass it any options that fit your needs.
- * When your component renders, `useCreateArticleMutation` returns an object that includes:
+ * To run a mutation, you first call `useMutationMutation` within a Vue component and pass it any options that fit your needs.
+ * When your component renders, `useMutationMutation` returns an object that includes:
  * - A mutate function that you can call at any time to execute the mutation
  * - Several other properties: https://v4.apollo.vuejs.org/api/use-mutation.html#return
  *
  * @param options that will be passed into the mutation, supported options are listed on: https://v4.apollo.vuejs.org/guide-composable/mutation.html#options;
  *
  * @example
- * const { mutate, loading, error, onDone } = useCreateArticleMutation({
+ * const { mutate, loading, error, onDone } = useMutationMutation({
  *   variables: {
  *     title: // value for 'title'
  *     content: // value for 'content'
@@ -249,10 +332,10 @@ export const CreateArticleDocument = gql`
  *   },
  * });
  */
-export function useCreateArticleMutation(options: VueApolloComposable.UseMutationOptions<CreateArticleMutation, CreateArticleMutationVariables> | ReactiveFunction<VueApolloComposable.UseMutationOptions<CreateArticleMutation, CreateArticleMutationVariables>> = {}) {
-  return VueApolloComposable.useMutation<CreateArticleMutation, CreateArticleMutationVariables>(CreateArticleDocument, options);
+export function useMutationMutation(options: VueApolloComposable.UseMutationOptions<MutationMutation, MutationMutationVariables> | ReactiveFunction<VueApolloComposable.UseMutationOptions<MutationMutation, MutationMutationVariables>> = {}) {
+  return VueApolloComposable.useMutation<MutationMutation, MutationMutationVariables>(MutationDocument, options);
 }
-export type CreateArticleMutationCompositionFunctionResult = VueApolloComposable.UseMutationReturn<CreateArticleMutation, CreateArticleMutationVariables>;
+export type MutationMutationCompositionFunctionResult = VueApolloComposable.UseMutationReturn<MutationMutation, MutationMutationVariables>;
 export const CreateUserDocument = gql`
     mutation CreateUser($username: String!, $password: String!) {
   createUser(username: $username, password: $password) {
@@ -331,6 +414,12 @@ export const CreateCommentDocument = gql`
     comment {
       id
       content
+      userId
+      articleId
+      User {
+        id
+        username
+      }
     }
   }
 }
@@ -362,11 +451,17 @@ export type CreateCommentMutationCompositionFunctionResult = VueApolloComposable
 export const CreateLikeDocument = gql`
     mutation CreateLike($userId: ID!, $articleId: ID!) {
   createLike(userId: $userId, articleId: $articleId) {
-    code
-    message
     success
+    message
+    code
     like {
       id
+      userId
+      articleId
+      User {
+        id
+        username
+      }
     }
   }
 }
@@ -394,6 +489,150 @@ export function useCreateLikeMutation(options: VueApolloComposable.UseMutationOp
   return VueApolloComposable.useMutation<CreateLikeMutation, CreateLikeMutationVariables>(CreateLikeDocument, options);
 }
 export type CreateLikeMutationCompositionFunctionResult = VueApolloComposable.UseMutationReturn<CreateLikeMutation, CreateLikeMutationVariables>;
+export const DeleteLikeDocument = gql`
+    mutation DeleteLike($deleteLikeId: ID!) {
+  deleteLike(id: $deleteLikeId) {
+    code
+    message
+    success
+    like {
+      id
+      userId
+      articleId
+      User {
+        id
+        username
+      }
+    }
+  }
+}
+    `;
+
+/**
+ * __useDeleteLikeMutation__
+ *
+ * To run a mutation, you first call `useDeleteLikeMutation` within a Vue component and pass it any options that fit your needs.
+ * When your component renders, `useDeleteLikeMutation` returns an object that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - Several other properties: https://v4.apollo.vuejs.org/api/use-mutation.html#return
+ *
+ * @param options that will be passed into the mutation, supported options are listed on: https://v4.apollo.vuejs.org/guide-composable/mutation.html#options;
+ *
+ * @example
+ * const { mutate, loading, error, onDone } = useDeleteLikeMutation({
+ *   variables: {
+ *     deleteLikeId: // value for 'deleteLikeId'
+ *   },
+ * });
+ */
+export function useDeleteLikeMutation(options: VueApolloComposable.UseMutationOptions<DeleteLikeMutation, DeleteLikeMutationVariables> | ReactiveFunction<VueApolloComposable.UseMutationOptions<DeleteLikeMutation, DeleteLikeMutationVariables>> = {}) {
+  return VueApolloComposable.useMutation<DeleteLikeMutation, DeleteLikeMutationVariables>(DeleteLikeDocument, options);
+}
+export type DeleteLikeMutationCompositionFunctionResult = VueApolloComposable.UseMutationReturn<DeleteLikeMutation, DeleteLikeMutationVariables>;
+export const UpdateArticleDocument = gql`
+    mutation UpdateArticle($updateArticleId: ID!, $title: String, $content: String) {
+  updateArticle(id: $updateArticleId, title: $title, content: $content) {
+    code
+    message
+    success
+    article {
+      id
+      title
+      content
+      likes {
+        id
+        userId
+        articleId
+      }
+      User {
+        id
+        username
+      }
+      comments {
+        id
+        content
+        userId
+        articleId
+      }
+    }
+  }
+}
+    `;
+
+/**
+ * __useUpdateArticleMutation__
+ *
+ * To run a mutation, you first call `useUpdateArticleMutation` within a Vue component and pass it any options that fit your needs.
+ * When your component renders, `useUpdateArticleMutation` returns an object that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - Several other properties: https://v4.apollo.vuejs.org/api/use-mutation.html#return
+ *
+ * @param options that will be passed into the mutation, supported options are listed on: https://v4.apollo.vuejs.org/guide-composable/mutation.html#options;
+ *
+ * @example
+ * const { mutate, loading, error, onDone } = useUpdateArticleMutation({
+ *   variables: {
+ *     updateArticleId: // value for 'updateArticleId'
+ *     title: // value for 'title'
+ *     content: // value for 'content'
+ *   },
+ * });
+ */
+export function useUpdateArticleMutation(options: VueApolloComposable.UseMutationOptions<UpdateArticleMutation, UpdateArticleMutationVariables> | ReactiveFunction<VueApolloComposable.UseMutationOptions<UpdateArticleMutation, UpdateArticleMutationVariables>> = {}) {
+  return VueApolloComposable.useMutation<UpdateArticleMutation, UpdateArticleMutationVariables>(UpdateArticleDocument, options);
+}
+export type UpdateArticleMutationCompositionFunctionResult = VueApolloComposable.UseMutationReturn<UpdateArticleMutation, UpdateArticleMutationVariables>;
+export const DeleteArticleDocument = gql`
+    mutation DeleteArticle($deleteArticleId: ID!) {
+  deleteArticle(id: $deleteArticleId) {
+    code
+    message
+    success
+    article {
+      id
+      title
+      content
+      likes {
+        id
+        userId
+        articleId
+      }
+      User {
+        id
+        username
+      }
+      comments {
+        id
+        content
+        userId
+        articleId
+      }
+    }
+  }
+}
+    `;
+
+/**
+ * __useDeleteArticleMutation__
+ *
+ * To run a mutation, you first call `useDeleteArticleMutation` within a Vue component and pass it any options that fit your needs.
+ * When your component renders, `useDeleteArticleMutation` returns an object that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - Several other properties: https://v4.apollo.vuejs.org/api/use-mutation.html#return
+ *
+ * @param options that will be passed into the mutation, supported options are listed on: https://v4.apollo.vuejs.org/guide-composable/mutation.html#options;
+ *
+ * @example
+ * const { mutate, loading, error, onDone } = useDeleteArticleMutation({
+ *   variables: {
+ *     deleteArticleId: // value for 'deleteArticleId'
+ *   },
+ * });
+ */
+export function useDeleteArticleMutation(options: VueApolloComposable.UseMutationOptions<DeleteArticleMutation, DeleteArticleMutationVariables> | ReactiveFunction<VueApolloComposable.UseMutationOptions<DeleteArticleMutation, DeleteArticleMutationVariables>> = {}) {
+  return VueApolloComposable.useMutation<DeleteArticleMutation, DeleteArticleMutationVariables>(DeleteArticleDocument, options);
+}
+export type DeleteArticleMutationCompositionFunctionResult = VueApolloComposable.UseMutationReturn<DeleteArticleMutation, DeleteArticleMutationVariables>;
 export const GetUsersDocument = gql`
     query GetUsers {
   getUsers {
@@ -428,6 +667,29 @@ export const GetArticlesDocument = gql`
     id
     title
     content
+    likes {
+      id
+      userId
+      articleId
+      User {
+        id
+        username
+      }
+    }
+    User {
+      id
+      username
+    }
+    comments {
+      id
+      content
+      userId
+      articleId
+      User {
+        id
+        username
+      }
+    }
   }
 }
     `;
@@ -451,35 +713,70 @@ export function useGetArticlesLazyQuery(options: VueApolloComposable.UseQueryOpt
   return VueApolloComposable.useLazyQuery<GetArticlesQuery, GetArticlesQueryVariables>(GetArticlesDocument, {}, options);
 }
 export type GetArticlesQueryCompositionFunctionResult = VueApolloComposable.UseQueryReturn<GetArticlesQuery, GetArticlesQueryVariables>;
-export const GetArticleDocument = gql`
-    query GetArticle($id: ID!) {
-  getArticle(id: $id) {
+export const GetCommentsDocument = gql`
+    query GetComments {
+  getComments {
     id
-    title
     content
+    userId
+    articleId
+    User {
+      id
+      username
+    }
   }
 }
     `;
 
 /**
- * __useGetArticleQuery__
+ * __useGetCommentsQuery__
  *
- * To run a query within a Vue component, call `useGetArticleQuery` and pass it any options that fit your needs.
- * When your component renders, `useGetArticleQuery` returns an object from Apollo Client that contains result, loading and error properties
+ * To run a query within a Vue component, call `useGetCommentsQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetCommentsQuery` returns an object from Apollo Client that contains result, loading and error properties
  * you can use to render your UI.
  *
- * @param variables that will be passed into the query
  * @param options that will be passed into the query, supported options are listed on: https://v4.apollo.vuejs.org/guide-composable/query.html#options;
  *
  * @example
- * const { result, loading, error } = useGetArticleQuery({
- *   id: // value for 'id'
- * });
+ * const { result, loading, error } = useGetCommentsQuery();
  */
-export function useGetArticleQuery(variables: GetArticleQueryVariables | VueCompositionApi.Ref<GetArticleQueryVariables> | ReactiveFunction<GetArticleQueryVariables>, options: VueApolloComposable.UseQueryOptions<GetArticleQuery, GetArticleQueryVariables> | VueCompositionApi.Ref<VueApolloComposable.UseQueryOptions<GetArticleQuery, GetArticleQueryVariables>> | ReactiveFunction<VueApolloComposable.UseQueryOptions<GetArticleQuery, GetArticleQueryVariables>> = {}) {
-  return VueApolloComposable.useQuery<GetArticleQuery, GetArticleQueryVariables>(GetArticleDocument, variables, options);
+export function useGetCommentsQuery(options: VueApolloComposable.UseQueryOptions<GetCommentsQuery, GetCommentsQueryVariables> | VueCompositionApi.Ref<VueApolloComposable.UseQueryOptions<GetCommentsQuery, GetCommentsQueryVariables>> | ReactiveFunction<VueApolloComposable.UseQueryOptions<GetCommentsQuery, GetCommentsQueryVariables>> = {}) {
+  return VueApolloComposable.useQuery<GetCommentsQuery, GetCommentsQueryVariables>(GetCommentsDocument, {}, options);
 }
-export function useGetArticleLazyQuery(variables?: GetArticleQueryVariables | VueCompositionApi.Ref<GetArticleQueryVariables> | ReactiveFunction<GetArticleQueryVariables>, options: VueApolloComposable.UseQueryOptions<GetArticleQuery, GetArticleQueryVariables> | VueCompositionApi.Ref<VueApolloComposable.UseQueryOptions<GetArticleQuery, GetArticleQueryVariables>> | ReactiveFunction<VueApolloComposable.UseQueryOptions<GetArticleQuery, GetArticleQueryVariables>> = {}) {
-  return VueApolloComposable.useLazyQuery<GetArticleQuery, GetArticleQueryVariables>(GetArticleDocument, variables, options);
+export function useGetCommentsLazyQuery(options: VueApolloComposable.UseQueryOptions<GetCommentsQuery, GetCommentsQueryVariables> | VueCompositionApi.Ref<VueApolloComposable.UseQueryOptions<GetCommentsQuery, GetCommentsQueryVariables>> | ReactiveFunction<VueApolloComposable.UseQueryOptions<GetCommentsQuery, GetCommentsQueryVariables>> = {}) {
+  return VueApolloComposable.useLazyQuery<GetCommentsQuery, GetCommentsQueryVariables>(GetCommentsDocument, {}, options);
 }
-export type GetArticleQueryCompositionFunctionResult = VueApolloComposable.UseQueryReturn<GetArticleQuery, GetArticleQueryVariables>;
+export type GetCommentsQueryCompositionFunctionResult = VueApolloComposable.UseQueryReturn<GetCommentsQuery, GetCommentsQueryVariables>;
+export const GetLikesDocument = gql`
+    query GetLikes {
+  getLikes {
+    id
+    userId
+    articleId
+    User {
+      id
+      username
+    }
+  }
+}
+    `;
+
+/**
+ * __useGetLikesQuery__
+ *
+ * To run a query within a Vue component, call `useGetLikesQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetLikesQuery` returns an object from Apollo Client that contains result, loading and error properties
+ * you can use to render your UI.
+ *
+ * @param options that will be passed into the query, supported options are listed on: https://v4.apollo.vuejs.org/guide-composable/query.html#options;
+ *
+ * @example
+ * const { result, loading, error } = useGetLikesQuery();
+ */
+export function useGetLikesQuery(options: VueApolloComposable.UseQueryOptions<GetLikesQuery, GetLikesQueryVariables> | VueCompositionApi.Ref<VueApolloComposable.UseQueryOptions<GetLikesQuery, GetLikesQueryVariables>> | ReactiveFunction<VueApolloComposable.UseQueryOptions<GetLikesQuery, GetLikesQueryVariables>> = {}) {
+  return VueApolloComposable.useQuery<GetLikesQuery, GetLikesQueryVariables>(GetLikesDocument, {}, options);
+}
+export function useGetLikesLazyQuery(options: VueApolloComposable.UseQueryOptions<GetLikesQuery, GetLikesQueryVariables> | VueCompositionApi.Ref<VueApolloComposable.UseQueryOptions<GetLikesQuery, GetLikesQueryVariables>> | ReactiveFunction<VueApolloComposable.UseQueryOptions<GetLikesQuery, GetLikesQueryVariables>> = {}) {
+  return VueApolloComposable.useLazyQuery<GetLikesQuery, GetLikesQueryVariables>(GetLikesDocument, {}, options);
+}
+export type GetLikesQueryCompositionFunctionResult = VueApolloComposable.UseQueryReturn<GetLikesQuery, GetLikesQueryVariables>;

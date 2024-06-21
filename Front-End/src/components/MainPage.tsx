@@ -2,17 +2,12 @@ import React, { useState, useEffect } from 'react';
 import { useQuery } from '@apollo/client';
 import { Link } from 'react-router-dom';
 import { GET_ARTICLES } from '../graphql/queries';
-import { GetArticlesQuery } from '../generated/graphql';
-import { UserIcon, DocumentTextIcon, ChatBubbleLeftRightIcon, CalendarDaysIcon, PhotoIcon, UsersIcon } from '@heroicons/react/24/outline';
+import { GetArticlesQuery } from '../generated/graphql'
+import { DocumentTextIcon, ChatBubbleLeftRightIcon, CalendarDaysIcon, PhotoIcon, UsersIcon } from '@heroicons/react/24/outline';
 import { jwtDecode } from 'jwt-decode';
 import ArticleList from './ArticleList';
-import CreateArticle from './CreateArticle';
-
-interface DecodedToken {
-  id: string;
-  username: string;
-  iat: number;
-}
+import UserList from './UserList';
+import { DecodedToken } from '../types';
 
 const MainPage: React.FC = () => {
   const userProfileImage = "https://images.pexels.com/photos/771742/pexels-photo-771742.jpeg";
@@ -24,17 +19,13 @@ const MainPage: React.FC = () => {
   }
 
   const { loading, error, data } = useQuery<GetArticlesQuery>(GET_ARTICLES);
-  const [articles, setArticles] = useState([]);
+  const [articles, setArticles] = useState<GetArticlesQuery['getArticles']>([]);
 
   useEffect(() => {
     if (data) {
       setArticles(data.getArticles);
     }
   }, [data]);
-
-  const handleAddArticle = (article) => {
-    setArticles([article, ...articles]);
-  };
 
   if (loading) return <p>Loading...</p>;
   if (error) return <p>Error: {error.message}</p>;
@@ -48,38 +39,39 @@ const MainPage: React.FC = () => {
             <img className="h-12 w-12 object-cover rounded-full mr-3" src={userProfileImage} alt="Profile" />
             <div className="flex flex-col">
               <h4 className="font-bold">{username}</h4>
-              <Link to="/profile" className="text-blue-500 hover:underline">Voir mon profil</Link>
+              <Link to="#" className="text-blue-500 hover:underline cursor-not-allowed">Voir mon profil</Link>
             </div>
           </div>
-          <div className="mt-3 p-2">
+          <div className="mt-3 p-2 border-b-2">
             <Link className="flex my-1 rounded-md p-1 hover:bg-slate-300" to="#">
               <DocumentTextIcon className="h-6 w-6 text-[#385999]" />
               <h5 className="my-auto ml-2">Flux d'actualités</h5>
             </Link>
-            <Link className="flex my-1 rounded-md p-1 hover:bg-slate-300" to="#">
+            <Link className="flex my-1 rounded-md p-1 hover:bg-slate-300 cursor-not-allowed" to="#">
               <ChatBubbleLeftRightIcon className="h-6 w-6 text-[#385999]" />
               <h5 className="my-auto ml-2">Messages</h5>
             </Link>
-            <Link className="flex my-1 rounded-md p-1 hover:bg-slate-300" to="#">
+            <Link className="flex my-1 rounded-md p-1 hover:bg-slate-300 cursor-not-allowed" to="#">
               <CalendarDaysIcon className="h-6 w-6 text-[#385999]" />
               <h5 className="my-auto ml-2">Evenements</h5>
             </Link>
-            <Link className="flex my-1 rounded-md p-1 hover:bg-slate-300" to="#">
+            <Link className="flex my-1 rounded-md p-1 hover:bg-slate-300 cursor-not-allowed" to="#">
               <PhotoIcon className="h-6 w-6 text-[#385999]" />
               <h5 className="my-auto ml-2">Photos</h5>
             </Link>
-            <Link className="flex my-1 rounded-md p-1 hover:bg-slate-300" to="#">
+            <Link className="flex my-1 rounded-md p-1 hover:bg-slate-300 cursor-not-allowed" to="#">
               <UsersIcon className="h-6 w-6 text-[#385999]" />
               <h5 className="my-auto ml-2">Amis</h5>
             </Link>
           </div>
+          <div className="p-2">
+            <h5 className="text-slate-400 mb-2">Suggestion d'amis</h5>
+            <UserList />
+          </div>
         </div>
 
         {/* Colonne du milieu */}
-        <div className="col-span-2 mt-5 flex flex-col">
-          {/* Formulaire de création d'article */}
-          <CreateArticle onAddArticle={handleAddArticle} />
-          
+        <div className="col-span-2 mt-5 flex flex-col">          
           {/* Articles */}
           <ArticleList articles={articles} />
         </div>

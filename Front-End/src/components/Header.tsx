@@ -1,7 +1,7 @@
 import React from 'react';
 import logo from '../assets/logo.png';
 import { UsersIcon, ChatBubbleLeftRightIcon, GlobeAmericasIcon, MagnifyingGlassIcon } from '@heroicons/react/24/outline';
-import LoggoutButton from './LogoutButton';
+import LogoutButton from './LogoutButton';
 import { Link } from 'react-router-dom';
   
   const Header: React.FC = () => {
@@ -15,9 +15,9 @@ import { Link } from 'react-router-dom';
                     </Link>
                     </div>
                     <div className="flex flex-row h-8 w-24 my-auto text-[#284184] ms-1 ">
-                        <UsersIcon className="hover:text-slate-50 ease-out duration-300" />
-                        <ChatBubbleLeftRightIcon className="mx-2 hover:text-slate-50 ease-out duration-300" />
-                        <GlobeAmericasIcon className="hover:text-slate-50 ease-out duration-300" />
+                        <UsersIcon className="hover:text-slate-50 ease-out duration-300 cursor-not-allowed" />
+                        <ChatBubbleLeftRightIcon className="mx-2 hover:text-slate-50 ease-out duration-300 cursor-not-allowed" />
+                        <GlobeAmericasIcon className="hover:text-slate-50 ease-out duration-300 cursor-not-allowed" />
                     </div>
                 </div>
 
@@ -30,8 +30,8 @@ import { Link } from 'react-router-dom';
 
                 <div className="inline-flex flex-row my-auto">
                     <button className="bg-[#3b5998] text-white">Home</button>
-                    <button className="bg-[#3b5998] text-white mx-3">Profile</button>
-                    <LoggoutButton />
+                    <button className="bg-[#3b5998] text-white mx-3 cursor-not-allowed">Profile</button>
+                    <LogoutButton />
                 </div>
             </div>
     </header>
