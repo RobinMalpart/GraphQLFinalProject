@@ -6,47 +6,13 @@ import { GetArticlesQuery, GetCommentsQuery, GetLikesQuery, CreateCommentMutatio
 import { HandThumbUpIcon, ChatBubbleOvalLeftEllipsisIcon, PencilSquareIcon } from '@heroicons/react/24/outline';
 import { jwtDecode } from 'jwt-decode';
 import CreateArticle from './CreateArticle';
+import { DecodedToken, Article } from '../types';
 
-interface DecodedToken {
-  id: string;
-  exp: number;
-  iat: number;
+interface ArticleListProps {
+  articles: GetArticlesQuery['getArticles'];
 }
 
-interface User {
-  __typename?: "User";
-  id: string;
-  username: string;
-}
-
-interface Like {
-  __typename?: "Like";
-  id: string;
-  userId: string;
-  articleId: string;
-  User: User;
-}
-
-interface Comment {
-  __typename?: "Comment";
-  id: string;
-  content: string;
-  userId: string;
-  articleId: string;
-  User: User;
-}
-
-interface Article {
-  __typename?: "Article";
-  id: string;
-  title: string;
-  content: string;
-  likes: Like[];
-  User: User;
-  comments: Comment[];
-}
-
-const ArticleList: React.FC = () => {
+const ArticleList: React.FC<ArticleListProps> = () => {
   const { loading, error, data } = useQuery<GetArticlesQuery>(GET_ARTICLES);
   const { data: commentsData } = useQuery<GetCommentsQuery>(GET_COMMENTS);
   const { data: likesData } = useQuery<GetLikesQuery>(GET_LIKES);

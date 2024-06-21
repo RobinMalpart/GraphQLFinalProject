@@ -5,18 +5,7 @@ import SignUp from '../components/SignUp';
 import Login from '../components/Login';
 import CreateArticle from '../components/CreateArticle';
 import PrivateRoute from '../components/PrivateRoute';
-
-interface User {
-  username: string;
-  id: string;
-}
-
-interface Article {
-  id: string;
-  title: string;
-  content: string;
-  User: User;
-}
+import { Article } from '../types';
 
 const AppRouter: React.FC = () => {
   const handleAddArticle = (article: Article) => {
