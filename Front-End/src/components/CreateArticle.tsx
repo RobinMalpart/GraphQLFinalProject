@@ -1,47 +1,9 @@
 import React, { useState } from 'react';
 import { useMutation } from '@apollo/client';
 import { CREATE_ARTICLE } from '../graphql/mutations';
-import { CreateArticleMutation, CreateArticleMutationVariables } from '../generated/graphql';
+import { MutationMutation as CreateArticleMutation, MutationMutationVariables as CreateArticleMutationVariables } from '../generated/graphql';
 import { jwtDecode } from 'jwt-decode';
-
-interface DecodedToken {
-  id: string;
-  exp: number;
-  iat: number;
-}
-
-interface User {
-  __typename?: "User";
-  id: string;
-  username: string;
-}
-
-interface Like {
-  __typename?: "Like";
-  id: string;
-  userId: string;
-  articleId: string;
-  User: User;
-}
-
-interface Comment {
-  __typename?: "Comment";
-  id: string;
-  content: string;
-  userId: string;
-  articleId: string;
-  User: User;
-}
-
-interface Article {
-  __typename?: "Article";
-  id: string;
-  title: string;
-  content: string;
-  likes: Like[];
-  User: User;
-  comments: Comment[];
-}
+import { Article, DecodedToken } from '../types';
 
 interface CreateArticleProps {
   onAddArticle: (article: Article) => void;
@@ -65,7 +27,12 @@ const CreateArticle: React.FC<CreateArticleProps> = ({ onAddArticle }) => {
     try {
       const { data } = await createArticle({ variables: { title, content, userId } });
       if (data?.createArticle.success && data.createArticle.article) {
-        onAddArticle(data.createArticle.article);
+        const newArticle: Article = {
+          ...data.createArticle.article,
+          likes: [],
+          comments: []
+        };
+        onAddArticle(newArticle);
         setTitle('');
         setContent('');
       } else {
