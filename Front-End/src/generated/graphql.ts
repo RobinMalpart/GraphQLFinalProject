@@ -257,6 +257,22 @@ export type DeleteLikeMutationVariables = Exact<{
 
 export type DeleteLikeMutation = { __typename?: 'Mutation', deleteLike: { __typename?: 'DeleteLikeResponse', code: number, message: string, success: boolean, like?: { __typename?: 'Like', id: string, userId: string, articleId: string, User: { __typename?: 'User', id: string, username: string } } | null } };
 
+export type UpdateArticleMutationVariables = Exact<{
+  updateArticleId: Scalars['ID']['input'];
+  title?: InputMaybe<Scalars['String']['input']>;
+  content?: InputMaybe<Scalars['String']['input']>;
+}>;
+
+
+export type UpdateArticleMutation = { __typename?: 'Mutation', updateArticle: { __typename?: 'UpdateArticleResponse', code: number, message: string, success: boolean, article?: { __typename?: 'Article', id: string, title: string, content: string, likes: Array<{ __typename?: 'Like', id: string, userId: string, articleId: string }>, User: { __typename?: 'User', id: string, username: string }, comments: Array<{ __typename?: 'Comment', id: string, content: string, userId: string, articleId: string }> } | null } };
+
+export type DeleteArticleMutationVariables = Exact<{
+  deleteArticleId: Scalars['ID']['input'];
+}>;
+
+
+export type DeleteArticleMutation = { __typename?: 'Mutation', deleteArticle: { __typename?: 'DeleteArticleResponse', code: number, message: string, success: boolean, article?: { __typename?: 'Article', id: string, title: string, content: string, likes: Array<{ __typename?: 'Like', id: string, userId: string, articleId: string }>, User: { __typename?: 'User', id: string, username: string }, comments: Array<{ __typename?: 'Comment', id: string, content: string, userId: string, articleId: string }> } | null } };
+
 export type GetUsersQueryVariables = Exact<{ [key: string]: never; }>;
 
 
@@ -513,6 +529,110 @@ export function useDeleteLikeMutation(options: VueApolloComposable.UseMutationOp
   return VueApolloComposable.useMutation<DeleteLikeMutation, DeleteLikeMutationVariables>(DeleteLikeDocument, options);
 }
 export type DeleteLikeMutationCompositionFunctionResult = VueApolloComposable.UseMutationReturn<DeleteLikeMutation, DeleteLikeMutationVariables>;
+export const UpdateArticleDocument = gql`
+    mutation UpdateArticle($updateArticleId: ID!, $title: String, $content: String) {
+  updateArticle(id: $updateArticleId, title: $title, content: $content) {
+    code
+    message
+    success
+    article {
+      id
+      title
+      content
+      likes {
+        id
+        userId
+        articleId
+      }
+      User {
+        id
+        username
+      }
+      comments {
+        id
+        content
+        userId
+        articleId
+      }
+    }
+  }
+}
+    `;
+
+/**
+ * __useUpdateArticleMutation__
+ *
+ * To run a mutation, you first call `useUpdateArticleMutation` within a Vue component and pass it any options that fit your needs.
+ * When your component renders, `useUpdateArticleMutation` returns an object that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - Several other properties: https://v4.apollo.vuejs.org/api/use-mutation.html#return
+ *
+ * @param options that will be passed into the mutation, supported options are listed on: https://v4.apollo.vuejs.org/guide-composable/mutation.html#options;
+ *
+ * @example
+ * const { mutate, loading, error, onDone } = useUpdateArticleMutation({
+ *   variables: {
+ *     updateArticleId: // value for 'updateArticleId'
+ *     title: // value for 'title'
+ *     content: // value for 'content'
+ *   },
+ * });
+ */
+export function useUpdateArticleMutation(options: VueApolloComposable.UseMutationOptions<UpdateArticleMutation, UpdateArticleMutationVariables> | ReactiveFunction<VueApolloComposable.UseMutationOptions<UpdateArticleMutation, UpdateArticleMutationVariables>> = {}) {
+  return VueApolloComposable.useMutation<UpdateArticleMutation, UpdateArticleMutationVariables>(UpdateArticleDocument, options);
+}
+export type UpdateArticleMutationCompositionFunctionResult = VueApolloComposable.UseMutationReturn<UpdateArticleMutation, UpdateArticleMutationVariables>;
+export const DeleteArticleDocument = gql`
+    mutation DeleteArticle($deleteArticleId: ID!) {
+  deleteArticle(id: $deleteArticleId) {
+    code
+    message
+    success
+    article {
+      id
+      title
+      content
+      likes {
+        id
+        userId
+        articleId
+      }
+      User {
+        id
+        username
+      }
+      comments {
+        id
+        content
+        userId
+        articleId
+      }
+    }
+  }
+}
+    `;
+
+/**
+ * __useDeleteArticleMutation__
+ *
+ * To run a mutation, you first call `useDeleteArticleMutation` within a Vue component and pass it any options that fit your needs.
+ * When your component renders, `useDeleteArticleMutation` returns an object that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - Several other properties: https://v4.apollo.vuejs.org/api/use-mutation.html#return
+ *
+ * @param options that will be passed into the mutation, supported options are listed on: https://v4.apollo.vuejs.org/guide-composable/mutation.html#options;
+ *
+ * @example
+ * const { mutate, loading, error, onDone } = useDeleteArticleMutation({
+ *   variables: {
+ *     deleteArticleId: // value for 'deleteArticleId'
+ *   },
+ * });
+ */
+export function useDeleteArticleMutation(options: VueApolloComposable.UseMutationOptions<DeleteArticleMutation, DeleteArticleMutationVariables> | ReactiveFunction<VueApolloComposable.UseMutationOptions<DeleteArticleMutation, DeleteArticleMutationVariables>> = {}) {
+  return VueApolloComposable.useMutation<DeleteArticleMutation, DeleteArticleMutationVariables>(DeleteArticleDocument, options);
+}
+export type DeleteArticleMutationCompositionFunctionResult = VueApolloComposable.UseMutationReturn<DeleteArticleMutation, DeleteArticleMutationVariables>;
 export const GetUsersDocument = gql`
     query GetUsers {
   getUsers {

@@ -13,6 +13,39 @@ interface DecodedToken {
   iat: number;
 }
 
+interface User {
+  __typename?: "User";
+  id: string;
+  username: string;
+}
+
+interface Like {
+  __typename?: "Like";
+  id: string;
+  userId: string;
+  articleId: string;
+  User: User;
+}
+
+interface Comment {
+  __typename?: "Comment";
+  id: string;
+  content: string;
+  userId: string;
+  articleId: string;
+  User: User;
+}
+
+interface Article {
+  __typename?: "Article";
+  id: string;
+  title: string;
+  content: string;
+  likes: Like[];
+  User: User;
+  comments: Comment[];
+}
+
 const ArticleList: React.FC = () => {
   const { loading, error, data } = useQuery<GetArticlesQuery>(GET_ARTICLES);
   const { data: commentsData } = useQuery<GetCommentsQuery>(GET_COMMENTS);
@@ -135,10 +168,13 @@ const ArticleList: React.FC = () => {
       const { data } = await updateArticle({
         variables: { updateArticleId: editingArticleId!, title: editingTitle, content: editingContent }
       });
+
       if (data?.updateArticle.success && data.updateArticle.article) {
-        setArticles(articles.map(article =>
-          article.id === editingArticleId ? data.updateArticle.article : article
-        ));
+        setArticles(prevArticles => 
+          prevArticles.map(article => 
+            article.id === editingArticleId ? data.updateArticle.article : article
+          ).filter((article): article is Article => article !== null && article !== undefined)
+        );
         setEditingArticleId(null);
         setEditingTitle('');
         setEditingContent('');

@@ -23,11 +23,21 @@ const Login: React.FC = () => {
       }
     } catch (err) {
       console.error(err);
-      if (err.networkError && err.networkError.statusCode === 403) {
-        alert("Utilisateur ou Mot de passe incorrect");
+      if (err instanceof Error) {
+        if (err.hasOwnProperty('networkError')) {
+          const networkError = (err as any).networkError;
+          if (networkError.statusCode === 403) {
+            alert("Utilisateur ou Mot de passe incorrect");
+          }
+        } else {
+          alert(err.message);
+        }
+      } else {
+        alert('An unknown error occurred');
       }
     }
   };
+  
 
   return (
     <div>

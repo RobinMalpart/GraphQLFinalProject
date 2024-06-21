@@ -18,6 +18,8 @@
     "@graphql-codegen/typescript-react-apollo": "^4.3.0",
     "@graphql-codegen/typescript-vue-apollo": "^4.1.1",
     "@heroicons/react": "^2.1.4",
+    "@vue/apollo-composable": "^4.0.2",
+    "@vue/composition-api": "^1.7.2",
     "autoprefixer": "^10.4.19",
     "graphql": "^16.8.2",
     "graphql-codegen": "^0.4.0",
