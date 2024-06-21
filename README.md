@@ -1,6 +1,23 @@
+
 # Projet Facebook Graph.QL
 
 ## Description
+
+Facebook Graph.QL est une plateforme de blog moderne offrant des fonctionnalités d'authentification, de gestion d'articles, d'interactions utilisateur et de navigation intuitive. 
+Le projet utilise une architecture basée sur GraphQL pour une communication efficace entre le frontend et le backend.
+
+## Technologies utilisées
+
+- **GraphQL** : Pour la gestion des requêtes et des mutations.
+- **React TS** : Pour le frontend.
+- **TypeScript** : Pour un typage statique et une meilleure maintenabilité du code.
+- **Apollo Client** : Pour la gestion des requêtes GraphQL côté client.
+- **Apollo Server** : Pour le backend GraphQL.
+- **Prisma** : Pour l'ORM et la gestion de la base de données.
+
+## Installation
+
+Pour installer et lancer le projet, suivez ces étapes :
 
 ### Lancer le projet :
 
@@ -40,3 +57,11 @@
 ## Demo
 
 ![Demo](demo.gif)
+
+## Auteurs
+Ce projet a été réalisé par :
+
+- Robin MALPART
+- Julien Chazal
+- Julien SOMASUNDARAM
+- Sashtiga SASIRAJAH
