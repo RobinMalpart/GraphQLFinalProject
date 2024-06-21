@@ -43,6 +43,9 @@ const Login: React.FC = () => {
             <label htmlFor="password-login" className="block text-sm font-medium text-gray-700">Password</label>
             <input type="password" id="password-login" className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring focus:ring-blue-500 focus:border-blue-500" value={password} onChange={(e) => setPassword(e.target.value)} />
           </div>
+          <div className='flex justify-center mb-3'>
+            <a href='/signup' className='my-auto hover:text-blue-500'>Vous n'avez pas de compte ?</a>
+          </div>
           <button type="submit" className="w-full bg-blue-500 text-white py-2 rounded-md hover:bg-blue-700" disabled={loading} >
             Login
           </button>
