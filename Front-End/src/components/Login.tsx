@@ -4,6 +4,7 @@ import { SIGN_IN } from '../graphql/mutations';
 import { SignInMutation, SignInMutationVariables } from '../generated/graphql';
 import { useNavigate } from 'react-router-dom';
 import HeaderDisconnected from './HeaderDisconnected';
+import { ApolloError, ServerError } from '@apollo/client';
 
 const Login: React.FC = () => {
   const [username, setUsername] = useState('');
@@ -15,19 +16,28 @@ const Login: React.FC = () => {
     e.preventDefault();
     try {
       const { data } = await signIn({ variables: { username, password } });
+      console.log(data);
       if (data?.signIn.success) {
         localStorage.setItem('token', data.signIn.token as string);
         navigate('/');
+      } else if (data?.signIn.success === false) {
+        alert("Utilisateur ou Mot de passe incorrect");
       } else {
-        alert(data?.signIn.message);
+        alert('Erreur inconnue');
       }
     } catch (err) {
       console.error(err);
-      if (err.networkError && err.networkError.statusCode === 403) {
-        alert("Utilisateur ou Mot de passe incorrect");
+      if (err instanceof ApolloError && err.networkError) {
+        const networkError = err.networkError as ServerError;
+        if (networkError.statusCode === 403) {
+          alert("Utilisateur ou Mot de passe incorrect");
+        }
+      } else {
+        alert('An unknown error occurred');
       }
     }
   };
+  
 
   return (
     <div>
