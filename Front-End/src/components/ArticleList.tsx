@@ -6,14 +6,13 @@ import { GetArticlesQuery, GetCommentsQuery, GetLikesQuery, CreateCommentMutatio
 import { HandThumbUpIcon, ChatBubbleOvalLeftEllipsisIcon, PencilSquareIcon } from '@heroicons/react/24/outline';
 import { jwtDecode } from 'jwt-decode';
 import CreateArticle from './CreateArticle';
+import { DecodedToken, Article } from '../types';
 
-interface DecodedToken {
-  id: string;
-  exp: number;
-  iat: number;
+interface ArticleListProps {
+  articles: GetArticlesQuery['getArticles'];
 }
 
-const ArticleList: React.FC = () => {
+const ArticleList: React.FC<ArticleListProps> = () => {
   const { loading, error, data } = useQuery<GetArticlesQuery>(GET_ARTICLES);
   const { data: commentsData } = useQuery<GetCommentsQuery>(GET_COMMENTS);
   const { data: likesData } = useQuery<GetLikesQuery>(GET_LIKES);
@@ -135,10 +134,13 @@ const ArticleList: React.FC = () => {
       const { data } = await updateArticle({
         variables: { updateArticleId: editingArticleId!, title: editingTitle, content: editingContent }
       });
+
       if (data?.updateArticle.success && data.updateArticle.article) {
-        setArticles(articles.map(article =>
-          article.id === editingArticleId ? data.updateArticle.article : article
-        ));
+        setArticles(prevArticles => 
+          prevArticles.map(article => 
+            article.id === editingArticleId ? data.updateArticle.article : article
+          ).filter((article): article is Article => article !== null && article !== undefined)
+        );
         setEditingArticleId(null);
         setEditingTitle('');
         setEditingContent('');

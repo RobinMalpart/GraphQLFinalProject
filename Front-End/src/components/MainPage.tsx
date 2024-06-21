@@ -2,17 +2,12 @@ import React, { useState, useEffect } from 'react';
 import { useQuery } from '@apollo/client';
 import { Link } from 'react-router-dom';
 import { GET_ARTICLES } from '../graphql/queries';
-import { GetArticlesQuery, GetArticlesQuery_getArticles } from '../generated/graphql';
+import { GetArticlesQuery } from '../generated/graphql'
 import { DocumentTextIcon, ChatBubbleLeftRightIcon, CalendarDaysIcon, PhotoIcon, UsersIcon } from '@heroicons/react/24/outline';
 import { jwtDecode } from 'jwt-decode';
 import ArticleList from './ArticleList';
 import UserList from './UserList';
-
-interface DecodedToken {
-  id: string;
-  username: string;
-  iat: number;
-}
+import { DecodedToken } from '../types';
 
 const MainPage: React.FC = () => {
   const userProfileImage = "https://images.pexels.com/photos/771742/pexels-photo-771742.jpeg";
@@ -24,7 +19,7 @@ const MainPage: React.FC = () => {
   }
 
   const { loading, error, data } = useQuery<GetArticlesQuery>(GET_ARTICLES);
-  const [articles, setArticles] = useState<GetArticlesQuery_getArticles[]>([]);
+  const [articles, setArticles] = useState<GetArticlesQuery['getArticles']>([]);
 
   useEffect(() => {
     if (data) {

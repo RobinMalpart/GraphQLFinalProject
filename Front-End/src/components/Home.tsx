@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 import { UserIcon } from '@heroicons/react/24/outline';
 import Header from './Header';
 import HeaderDisconnected from './HeaderDisconnected';
-import peoplelink from '../assets/peoplelink.png';
+import peoplelink from '../assets/peoplelink.webp';
 import MainPage from './MainPage';
 
 const Home: React.FC = () => {
